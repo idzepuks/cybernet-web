@@ -77,9 +77,37 @@
             <div class="map-header"><span>Hacker Hideout</span><i class="fas fa-satellite-dish"></i></div>
             <div class="map-content" id="home-map-status"><i class="fas fa-network-wired" style="font-size: 40px; opacity: 0.3;"></i></div>
         </div>
+
+        <div class="missions-panel" style="margin-top: 0;">
+            <h4 style="margin: 0 0 10px 0; color: var(--cyan); font-size: 13px; letter-spacing: 1px;"><i class="fas fa-user-shield"></i> HAKERA STATISTIKA</h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                <div style="background: rgba(255,255,255,0.01); border: 1px solid #1a2639; padding: 10px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 11px; color: var(--grey); font-weight: 700;">⚔️ UZBRUKUMA SPĒKS</div>
+                    <div style="font-size: 22px; font-weight: 700; color: var(--red); margin-top: 2px;" id="home-stat-attack">10</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.01); border: 1px solid #1a2639; padding: 10px; border-radius: 8px; text-align: center;">
+                    <div style="font-size: 11px; color: var(--grey); font-weight: 700;">🛡️ AIZSARDZĪBA</div>
+                    <div style="font-size: 22px; font-weight: 700; color: var(--green); margin-top: 2px;" id="home-stat-defense">10</div>
+                </div>
+            </div>
+
+            <h4 style="margin: 0 0 8px 0; color: var(--cyan); font-size: 12px; letter-spacing: 1px;"><i class="fas fa-sync-alt fa-spin" style="font-size: 10px; color: var(--cyan);"></i> PROCESU MONITORINGS</h4>
+            <div style="background: rgba(0,0,0,0.15); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 6px;">
+                    <span style="color: var(--grey);">🛠️ Bāzes Būvniecība:</span>
+                    <strong id="home-proc-construction" style="color: #fff;">Nav aktīvu procesu</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--grey);">💻 Kibermisija:</span>
+                    <strong id="home-proc-mission" style="color: #fff;">Nav aktīvu operāciju</strong>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
+    
     <div id="tab-casino" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🎲 CYBER-CASINO</h3><p>Crash un Sloti tiek konfigurēti.</p></div></div></div>
 
     <div id="tab-base" class="tab-content">
@@ -148,11 +176,53 @@
             document.getElementById('val-gold').innerText = p.resources.gold;
             document.getElementById('home-map-status').innerHTML = p.resources.battery === 0 ? `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>` : `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
 
+            // 💡 PIEVIENOTS: Atjaunojam statistiku galvenajā lapā (Home) no servera aprēķiniem
+            if(p.stats) {
+                document.getElementById('home-stat-attack').innerText = p.stats.attack;
+                document.getElementById('home-stat-defense').innerText = p.stats.defense;
+            }
+
             renderBuildings();
             renderMissions();
+            renderHomeMonitors();
         }
 
-        // 💡 ATJAUNINĀTS: Ēku saraksta zīmēšana ar dzīvajiem būvniecības taimeriem
+        // 💡 PIEVIENOTS: Jaunā funkcija, kas vada taimerus tieši pirmajā lapā (Home)
+        function renderHomeMonitors() {
+            if(!serverData) return;
+            
+            // 1. Pārbaudām būvniecību
+            const constr = serverData.construction;
+            const constrEl = document.getElementById('home-proc-construction');
+            if (constr) {
+                let timeLeft = constr.endTime - Date.now();
+                if (timeLeft > 0) {
+                    constrEl.innerHTML = `<span style="color:var(--cyan)">Uzlabo ${bNames[constr.bKey]} (${formatTime(timeLeft)})</span>`;
+                } else {
+                    constrEl.innerHTML = `<span style="color:var(--green)">Konfigurē datus...</span>`;
+                }
+            } else {
+                constrEl.innerText = "Nav aktīvu procesu";
+                constrEl.style.color = "var(--grey)";
+            }
+
+            // 2. Pārbaudām misijas
+            const activeM = serverData.missions?.active;
+            const missionEl = document.getElementById('home-proc-mission');
+            if (activeM) {
+                let timeLeft = activeM.endTime - Date.now();
+                if (timeLeft > 0) {
+                    let mColor = mInfo[activeM.diff]?.color || "var(--cyan)";
+                    missionEl.innerHTML = `<span style="color:${mColor}">Uzbrukums sistēmai (${formatTime(timeLeft)})</span>`;
+                } else {
+                    missionEl.innerHTML = `<span style="color:var(--green); font-weight:bold;">BEIGTS (Gatavs Claim!)</span>`;
+                }
+            } else {
+                missionEl.innerText = "Nav aktīvu operāciju";
+                missionEl.style.color = "var(--grey)";
+            }
+        }
+
         function renderBuildings() {
             if (!serverData) return;
             const p = serverData;
@@ -286,11 +356,12 @@
             if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
         }
 
-        // Taimeru atjaunošana abām sadaļām katru sekundi bez API slogošanas
+        // Taimeru reāllaika atjaunošana visām sadaļām (ieskaitot jauno Home)
         setInterval(() => {
             if (serverData) {
                 if (serverData.missions && serverData.missions.active) renderMissions();
                 if (serverData.construction) renderBuildings();
+                renderHomeMonitors(); // Atjaunojam galvenās lapas taimerus
             }
         }, 1000);
 
