@@ -36,7 +36,6 @@
         .map-header { display: flex; justify-content: space-between; padding: 10px 15px; background: rgba(0, 240, 255, 0.05); color: var(--cyan); font-weight: 600; border-bottom: 1px solid rgba(0, 240, 255, 0.2); }
         .map-content { height: 160px; display: flex; align-items: center; justify-content: center; color: rgba(0, 240, 255, 0.5); font-size: 14px; letter-spacing: 2px; }
         
-        /* Misiju paneļa stils jaunajā sadaļā */
         .missions-panel { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 12px; margin: 15px; padding: 15px; }
         .mission-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
         .mission-row { background: rgba(255,255,255,0.02); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
@@ -45,7 +44,10 @@
         .building-locked { filter: grayscale(1) opacity(0.4); border-style: dashed; }
         .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; }
         .btn-upgrade:active { background: var(--cyan); color: #000; }
-        
+        .btn-disabled { filter: grayscale(1); opacity: 0.5; pointer-events: none; }
+        .btn-claim { background: rgba(0, 255, 102, 0.2); border-color: var(--green); color: var(--green); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0, 255, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); } }
+
         .cost-tag { font-size: 11px; color: var(--grey); margin-top: 3px; display: block; }
         .prod-tag { font-size: 11px; color: var(--green); margin-top: 2px; display: block; }
 
@@ -78,7 +80,6 @@
     </div>
 
     <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
-    
     <div id="tab-casino" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🎲 CYBER-CASINO</h3><p>Crash un Sloti tiek konfigurēti.</p></div></div></div>
 
     <div id="tab-base" class="tab-content">
@@ -89,33 +90,8 @@
     <div id="tab-missions" class="tab-content">
         <div class="missions-panel">
             <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS</h3>
-            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz sistēmas, lai iegūtu tūlītējus resursus. Katrs uzbrukums tērē bāzes enerģiju.</p>
-            
-            <div class="mission-grid">
-                <div class="mission-row">
-                    <div>
-                        <div style="font-weight:700; color:#fff;">EASY OPERATION</div>
-                        <span style="font-size:12px; color:var(--green);">Balva: +30 Metāls</span>
-                    </div>
-                    <button class="btn-upgrade" onclick="runMission('easy')" style="width:90px;">HACK (-10⚡)</button>
-                </div>
-                
-                <div class="mission-row">
-                    <div>
-                        <div style="font-weight:700; color:#fff;">MEDIUM OPERATION</div>
-                        <span style="font-size:12px; color:var(--blue);">Balva: +25 Čipi</span>
-                    </div>
-                    <button class="btn-upgrade" onclick="runMission('medium')" style="width:90px; border-color:var(--blue); color:var(--blue);">HACK (-25⚡)</button>
-                </div>
-                
-                <div class="mission-row">
-                    <div>
-                        <div style="font-weight:700; color:#fff;">HARD OPERATION</div>
-                        <span style="font-size:12px; color:var(--red);">Balva: +80 Metāls</span>
-                    </div>
-                    <button class="btn-upgrade" onclick="runMission('hard')" style="width:90px; border-color:var(--red); color:var(--red);">HACK (-50⚡)</button>
-                </div>
-            </div>
+            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz sistēmas. Vienlaicīgi var veikt tikai vienu operāciju. Katrai 3 mēģinājumi dienā.</p>
+            <div class="mission-grid" id="missions-list">Ielādē...</div>
         </div>
     </div>
 
@@ -134,22 +110,12 @@
         const API_URL = "https://cybernet-sindicate.loca.lt/api"; 
         const tgId = tg?.initDataUnsafe?.user?.id || 123456789;
 
-        const bNames = {
-            mainframe: "Komandu Centrs", mine: "Lūžņu Pārstrāde", server: "Serveru Ferma",
-            generator: "Ģeneratoru Bloks", firewall: "Ugunsmūris", lab: "Kiber-Laboratorija",
-            vault: "Šifrēta Datu Velve", botnet: "Botnet Centrs"
-        };
+        let serverData = null; // Saglabāsim pēdējos datus priekš taimeriem
 
-        const bStats = {
-            mainframe: { bMetal: 200, bChips: 50,  bEnergy: 0,   bProd: 0 },
-            mine:      { bMetal: 100, bChips: 0,   bEnergy: 5,   bProd: 20 },
-            server:    { bMetal: 150, bChips: 40,  bEnergy: 8,   bProd: 10 },
-            generator: { bMetal: 120, bChips: 20,  bEnergy: 0,   bProd: 35 },
-            firewall:  { bMetal: 180, bChips: 80,  bEnergy: 4,   bProd: 0 },
-            lab:       { bMetal: 250, bChips: 150, bEnergy: 10,  bProd: 0 },
-            vault:     { bMetal: 300, bChips: 200, bEnergy: 6,   bProd: 0 },
-            botnet:    { bMetal: 500, bChips: 400, bEnergy: 15,  bProd: 0 }
-        };
+        const bNames = { mainframe: "Komandu Centrs", mine: "Lūžņu Pārstrāde", server: "Serveru Ferma", generator: "Ģeneratoru Bloks", firewall: "Ugunsmūris", lab: "Kiber-Laboratorija", vault: "Šifrēta Datu Velve", botnet: "Botnet Centrs" };
+        const bStats = { mainframe: { bMetal: 200, bChips: 50, bEnergy: 0, bProd: 0 }, mine: { bMetal: 100, bChips: 0, bEnergy: 5, bProd: 20 }, server: { bMetal: 150, bChips: 40, bEnergy: 8, bProd: 10 }, generator: { bMetal: 120, bChips: 20, bEnergy: 0, bProd: 35 }, firewall: { bMetal: 180, bChips: 80, bEnergy: 4, bProd: 0 }, lab: { bMetal: 250, bChips: 150, bEnergy: 10, bProd: 0 }, vault: { bMetal: 300, bChips: 200, bEnergy: 6, bProd: 0 }, botnet: { bMetal: 500, bChips: 400, bEnergy: 15, bProd: 0 } };
+        
+        const mInfo = { easy: { name: "EASY OPERATION", rew: "+30 Metāls", color: "var(--green)", time: "5m" }, medium: { name: "MEDIUM OPERATION", rew: "+25 Čipi", color: "var(--blue)", time: "15m" }, hard: { name: "HARD OPERATION", rew: "+80 Metāls", color: "var(--red)", time: "30m" } };
 
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -161,9 +127,17 @@
         async function fetchPlayerData() {
             try {
                 let res = await fetch(`${API_URL}/player/${tgId}`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
-                let p = await res.json();
-                updateUI(p);
-            } catch (err) { console.log("Meklē serveri..."); }
+                serverData = await res.json();
+                updateUI(serverData);
+            } catch (err) {}
+        }
+
+        function formatTime(ms) {
+            if (ms <= 0) return "00:00";
+            let totalSec = Math.floor(ms / 1000);
+            let m = Math.floor(totalSec / 60);
+            let s = totalSec % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
 
         function updateUI(p) {
@@ -171,98 +145,98 @@
             document.getElementById('val-chips').innerText = p.resources.silicon;
             document.getElementById('val-battery').innerText = p.resources.battery + "%";
             document.getElementById('val-gold').innerText = p.resources.gold;
+            document.getElementById('home-map-status').innerHTML = p.resources.battery === 0 ? `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>` : `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
 
-            if (p.resources.battery === 0) {
-                document.getElementById('home-map-status').innerHTML = `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>`;
-            } else {
-                document.getElementById('home-map-status').innerHTML = `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
-            }
-
+            // Bāzes ēkas (nemainītas)
             let bHtml = "";
             for (const [key, bData] of Object.entries(bStats)) {
                 let currentLvl = parseInt(p.buildings[key]) || 0;
                 let nextLvl = currentLvl + 1;
-
                 const costM = Math.floor(bData.bMetal * Math.pow(1.5, nextLvl - 1));
                 const costC = Math.floor(bData.bChips * Math.pow(1.5, nextLvl - 1));
-                let costText = `Izmaksas (Lvl ${nextLvl}): 🛠️ ${costM}`;
-                if (costC > 0) costText += ` | 💾 ${costC}`;
-
-                let prodText = "";
-                if (currentLvl > 0) {
-                    if (key === 'generator') {
-                        let prod = Math.floor(bData.bProd * Math.pow(1.3, currentLvl - 1));
-                        prodText = `⚡ Ražo ietilpību: +${prod}`;
-                    } else if (bData.bProd > 0) {
-                        let prod = Math.floor(bData.bProd * Math.pow(1.3, currentLvl - 1));
-                        let cons = Math.floor(bData.bEnergy * Math.pow(1.2, currentLvl - 1));
-                        let n = key === 'mine' ? 'Metālu' : 'Čipus';
-                        prodText = `Ražo: +${prod} ${n}/h | Patērē: -${cons} ⚡`;
-                    } else if (bData.bEnergy > 0) {
-                        let cons = Math.floor(bData.bEnergy * Math.pow(1.2, currentLvl - 1));
-                        prodText = `Patērē: -${cons} ⚡`;
-                    } else {
-                        prodText = `Status: Tiešsaistē`;
-                    }
-                } else {
-                    prodText = `Nav uzbūvēts`;
-                }
-
-                let isLocked = false;
-                let lockText = "";
-                let mainLvl = parseInt(p.buildings.mainframe) || 1;
-                
+                let isLocked = false; let lockText = ""; let mainLvl = parseInt(p.buildings.mainframe) || 1;
                 if (key === 'lab' && mainLvl < 5) { isLocked = true; lockText = "🔒 Vajag Mainframe Lvl 5"; }
                 if (key === 'vault' && mainLvl < 10) { isLocked = true; lockText = "🔒 Vajag Mainframe Lvl 10"; }
                 if (key === 'botnet' && mainLvl < 15) { isLocked = true; lockText = "🔒 Vajag Mainframe Lvl 15"; }
 
                 if (isLocked) {
-                    bHtml += `
-                        <div class="building-item building-locked">
-                            <div><div style="font-weight:700; color:#fff;">${bNames[key]}</div><span class="cost-tag">${lockText}</span></div>
-                        </div>`;
+                    bHtml += `<div class="building-item building-locked"><div><div style="font-weight:700; color:#fff;">${bNames[key]}</div><span class="cost-tag">${lockText}</span></div></div>`;
                 } else {
-                    bHtml += `
-                        <div class="building-item">
-                            <div>
-                                <div style="font-weight:700; color:#fff;">${bNames[key]} <span style="color:var(--cyan)">Lvl ${currentLvl}</span></div>
-                                <span class="prod-tag">${prodText}</span>
-                                <span class="cost-tag">${costText}</span>
-                            </div>
-                            <div style="width: 80px;">
-                                <button class="btn-upgrade" onclick="upgradeBuilding('${key}')">UZLABOT</button>
-                            </div>
-                        </div>`;
+                    bHtml += `<div class="building-item"><div><div style="font-weight:700; color:#fff;">${bNames[key]} <span style="color:var(--cyan)">Lvl ${currentLvl}</span></div><span class="cost-tag">Izmaksas (Lvl ${nextLvl}): 🛠️ ${costM} ${costC > 0 ? '| 💾 ' + costC : ''}</span></div><div style="width: 80px;"><button class="btn-upgrade" onclick="upgradeBuilding('${key}')">UZLABOT</button></div></div>`;
                 }
             }
             document.getElementById('buildings-list').innerHTML = bHtml;
+            renderMissions();
+        }
+
+        // 💡 Jaunā misiju zīmēšanas funkcija ar vizuālo taimeru loģiku
+        function renderMissions() {
+            if (!serverData || !serverData.missions) return;
+            const p = serverData;
+            const active = p.missions.active;
+            let mHtml = "";
+
+            for (const diff of ['easy', 'medium', 'hard']) {
+                const count = p.missions.counts[diff] || 0;
+                const m = mInfo[diff];
+                
+                let btnHtml = "";
+                let isThisRunning = active && active.diff === diff;
+                let isOtherRunning = active && active.diff !== diff;
+                
+                if (isThisRunning) {
+                    let timeLeft = active.endTime - Date.now();
+                    if (timeLeft > 0) {
+                        btnHtml = `<button class="btn-upgrade btn-disabled" style="width:90px;" id="timer-${diff}">${formatTime(timeLeft)}</button>`;
+                    } else {
+                        btnHtml = `<button class="btn-upgrade btn-claim" style="width:90px;" onclick="claimMission()">CLAIM</button>`;
+                    }
+                } else if (count >= 3) {
+                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:90px;">DONE</button>`;
+                } else if (isOtherRunning) {
+                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:90px;">GAIDI</button>`;
+                } else {
+                    btnHtml = `<button class="btn-upgrade" onclick="startMission('${diff}')" style="width:90px; border-color:${m.color}; color:${m.color};">START (${m.time})</button>`;
+                }
+
+                mHtml += `
+                <div class="mission-row">
+                    <div>
+                        <div style="font-weight:700; color:#fff;">${m.name}</div>
+                        <span style="font-size:12px; color:${m.color};">Balva: ${m.rew}</span>
+                        <span style="font-size:10px; color:var(--grey); display:block; margin-top:2px;">Šodien: ${count}/3</span>
+                    </div>
+                    ${btnHtml}
+                </div>`;
+            }
+            document.getElementById('missions-list').innerHTML = mHtml;
         }
 
         async function upgradeBuilding(bKey) {
-            try {
-                let res = await fetch(`${API_URL}/upgrade`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
-                    body: JSON.stringify({ tgId: tgId, bKey: bKey })
-                });
-                let data = await res.json();
-                if (data.error) { alert(data.error); } else { updateUI(data); }
-            } catch (err) { alert("Sistēmas kļūda būvniecības laikā."); }
+            let res = await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, bKey: bKey }) });
+            serverData = await res.json(); updateUI(serverData);
         }
 
-        async function runMission(diff) {
-            try {
-                let res = await fetch(`${API_URL}/mission`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
-                    body: JSON.stringify({ tgId: tgId, difficulty: diff })
-                });
-                let data = await res.json();
-                if (data.error) { alert(data.error); } else { updateUI(data); }
-            } catch (err) { alert("Sistēmas kļūda misijas laikā."); }
+        async function startMission(diff) {
+            let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) });
+            let data = await res.json();
+            if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
         }
 
-        setInterval(fetchPlayerData, 4000);
+        async function claimMission() {
+            let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId }) });
+            let data = await res.json();
+            if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
+        }
+
+        // Taimeris vizuālai atjaunošanai katru sekundi bez API slogošanas
+        setInterval(() => {
+            if (serverData && serverData.missions && serverData.missions.active) {
+                renderMissions();
+            }
+        }, 1000);
+
+        setInterval(fetchPlayerData, 5000); // Servera datu atjaunošana ik pēc 5s
         fetchPlayerData();
     </script>
 </body>
