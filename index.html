@@ -36,21 +36,22 @@
         .map-header { display: flex; justify-content: space-between; padding: 10px 15px; background: rgba(0, 240, 255, 0.05); color: var(--cyan); font-weight: 600; border-bottom: 1px solid rgba(0, 240, 255, 0.2); }
         .map-content { height: 160px; display: flex; align-items: center; justify-content: center; color: rgba(0, 240, 255, 0.5); font-size: 14px; letter-spacing: 2px; }
         
-        /* 💡 PIEVIENOTS: Misiju bloka dizains, saskaņots ar esošo tēmu */
-        .missions-panel { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 12px; margin: 0 15px 15px 15px; padding: 15px; }
-        .mission-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
+        /* Misiju paneļa stils jaunajā sadaļā */
+        .missions-panel { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 12px; margin: 15px; padding: 15px; }
+        .mission-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
+        .mission-row { background: rgba(255,255,255,0.02); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
 
         .building-item { background: var(--bg-panel); border: 1px solid var(--border-dark); margin: 0 15px 10px 15px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
         .building-locked { filter: grayscale(1) opacity(0.4); border-style: dashed; }
-        .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; width: 100%; text-align: center; }
+        .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; }
         .btn-upgrade:active { background: var(--cyan); color: #000; }
         
         .cost-tag { font-size: 11px; color: var(--grey); margin-top: 3px; display: block; }
         .prod-tag { font-size: 11px; color: var(--green); margin-top: 2px; display: block; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: var(--bg-panel); padding: 10px 0; border-top: 1px solid var(--border-dark); z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #556677; font-size: 11px; font-weight: 700; cursor: pointer; }
-        .nav-item i { font-size: 20px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #556677; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-align: center; }
+        .nav-item i { font-size: 18px; }
         .nav-item.active { color: var(--cyan); }
     </style>
 </head>
@@ -74,18 +75,10 @@
             <div class="map-header"><span>Hacker Hideout</span><i class="fas fa-satellite-dish"></i></div>
             <div class="map-content" id="home-map-status"><i class="fas fa-network-wired" style="font-size: 40px; opacity: 0.3;"></i></div>
         </div>
-
-        <div class="missions-panel">
-            <h4 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS</h4>
-            <div class="mission-grid">
-                <button class="btn-upgrade" onclick="runMission('easy')" style="font-size:10px;">EASY<br>+30 M<br><span style="font-size:8px; color:var(--grey);">-10 ⚡</span></button>
-                <button class="btn-upgrade" onclick="runMission('medium')" style="font-size:10px; border-color:var(--blue); color:var(--blue);">MED<br>+25 C<br><span style="font-size:8px; color:var(--grey);">-25 ⚡</span></button>
-                <button class="btn-upgrade" onclick="runMission('hard')" style="font-size:10px; border-color:var(--red); color:var(--red);">HARD<br>+80 M<br><span style="font-size:8px; color:var(--grey);">-50 ⚡</span></button>
-            </div>
-        </div>
     </div>
 
     <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
+    
     <div id="tab-casino" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🎲 CYBER-CASINO</h3><p>Crash un Sloti tiek konfigurēti.</p></div></div></div>
 
     <div id="tab-base" class="tab-content">
@@ -93,11 +86,45 @@
         <div id="buildings-list">Ielādē bāzes sistēmas...</div>
     </div>
 
+    <div id="tab-missions" class="tab-content">
+        <div class="missions-panel">
+            <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS</h3>
+            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz sistēmas, lai iegūtu tūlītējus resursus. Katrs uzbrukums tērē bāzes enerģiju.</p>
+            
+            <div class="mission-grid">
+                <div class="mission-row">
+                    <div>
+                        <div style="font-weight:700; color:#fff;">EASY OPERATION</div>
+                        <span style="font-size:12px; color:var(--green);">Balva: +30 Metāls</span>
+                    </div>
+                    <button class="btn-upgrade" onclick="runMission('easy')" style="width:90px;">HACK (-10⚡)</button>
+                </div>
+                
+                <div class="mission-row">
+                    <div>
+                        <div style="font-weight:700; color:#fff;">MEDIUM OPERATION</div>
+                        <span style="font-size:12px; color:var(--blue);">Balva: +25 Čipi</span>
+                    </div>
+                    <button class="btn-upgrade" onclick="runMission('medium')" style="width:90px; border-color:var(--blue); color:var(--blue);">HACK (-25⚡)</button>
+                </div>
+                
+                <div class="mission-row">
+                    <div>
+                        <div style="font-weight:700; color:#fff;">HARD OPERATION</div>
+                        <span style="font-size:12px; color:var(--red);">Balva: +80 Metāls</span>
+                    </div>
+                    <button class="btn-upgrade" onclick="runMission('hard')" style="width:90px; border-color:var(--red); color:var(--red);">HACK (-50⚡)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('tab-home', this)"><i class="fas fa-home"></i><span>HOME</span></div>
         <div class="nav-item" onclick="switchTab('tab-market', this)"><i class="fas fa-shopping-cart"></i><span>MARKET</span></div>
         <div class="nav-item" onclick="switchTab('tab-casino', this)"><i class="fas fa-dice"></i><span>CASINO</span></div>
         <div class="nav-item" onclick="switchTab('tab-base', this)"><i class="fas fa-server"></i><span>BASE</span></div>
+        <div class="nav-item" onclick="switchTab('tab-missions', this)"><i class="fas fa-terminal"></i><span>MISSIONS</span></div>
     </div>
 
     <script>
@@ -223,7 +250,6 @@
             } catch (err) { alert("Sistēmas kļūda būvniecības laikā."); }
         }
 
-        // 💡 PIEVIENOTS: Funkcija misiju palaišanai un komunikācijai ar serveri
         async function runMission(diff) {
             try {
                 let res = await fetch(`${API_URL}/mission`, {
