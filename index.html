@@ -18,15 +18,17 @@
         .top-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; font-size: 18px; color: var(--cyan); border-bottom: 1px solid var(--border-dark); background: var(--bg-panel); }
         .header-title { font-weight: 700; text-align: center; line-height: 1.1; letter-spacing: 1px; }
 
-        .resources-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 15px; }
-        .res-card { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 8px; padding: 12px 5px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .res-card i { font-size: 20px; margin-bottom: 8px; }
-        .res-name { font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
-        .res-val { font-size: 13px; font-weight: 600; color: #fff; }
+        /* Tagad te ir 5 kolonnas, lai iekļautu Proksijus */
+        .resources-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 15px; }
+        .res-card { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 8px; padding: 10px 2px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .res-card i { font-size: 16px; margin-bottom: 5px; }
+        .res-name { font-size: 9px; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
+        .res-val { font-size: 12px; font-weight: 600; color: #fff; }
         .c-metal { border-color: var(--grey); color: var(--grey); }
         .c-chips { border-color: var(--blue); color: var(--blue); }
         .c-battery { border-color: var(--green); color: var(--green); }
         .c-gold { border-color: var(--yellow); color: var(--yellow); }
+        .c-proxy { border-color: var(--red); color: var(--red); } /* Jaunais Proxy dizains */
 
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
@@ -37,7 +39,9 @@
         .map-content { height: 160px; display: flex; align-items: center; justify-content: center; color: rgba(0, 240, 255, 0.5); font-size: 14px; letter-spacing: 2px; }
         
         .missions-panel { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 12px; margin: 15px; padding: 15px; }
-        
+        .mission-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
+        .mission-row { background: rgba(255,255,255,0.02); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+
         .building-item { background: var(--bg-panel); border: 1px solid var(--border-dark); margin: 0 15px 10px 15px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
         .building-locked { filter: grayscale(1) opacity(0.4); border-style: dashed; }
         .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; transition: 0.2s; }
@@ -55,7 +59,7 @@
         .nav-item.active { color: var(--cyan); }
         .nav-item.active i { transform: translateY(-3px); }
 
-        /* ====== KAZINO DICE STILS ====== */
+        /* DICE CSS (Saglabāts) */
         .dice-history-bar { display: flex; gap: 5px; overflow-x: hidden; padding: 10px; background: #070d18; border-radius: 6px; border: 1px solid var(--border-dark); margin-bottom: 15px; }
         .dice-history-item { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #fff; min-width: 45px; text-align: center; }
         .dice-history-item.win { color: var(--green); background: rgba(0, 231, 0, 0.1); border: 1px solid rgba(0, 231, 0, 0.2); }
@@ -89,11 +93,13 @@
         <i class="fas fa-user-circle"></i>
     </div>
 
+    <!-- MAINĪTS: 5 resursu bloki -->
     <div class="resources-grid">
         <div class="res-card c-metal"><i class="fas fa-hammer"></i><span class="res-name">METAL</span><span class="res-val" id="val-metal">0</span></div>
         <div class="res-card c-chips"><i class="fas fa-microchip"></i><span class="res-name">CHIPS</span><span class="res-val" id="val-chips">0</span></div>
         <div class="res-card c-battery"><i class="fas fa-battery-half"></i><span class="res-name">BATTERY</span><span class="res-val" id="val-battery">100%</span></div>
-        <div class="res-card c-gold"><i class="fas fa-dollar-sign"></i><span class="res-name">GOLD CHIPS</span><span class="res-val" id="val-gold">0</span></div>
+        <div class="res-card c-gold"><i class="fas fa-dollar-sign"></i><span class="res-name">GOLD</span><span class="res-val" id="val-gold">0</span></div>
+        <div class="res-card c-proxy"><i class="fas fa-project-diagram"></i><span class="res-name">PROXIES</span><span class="res-val" id="val-proxies">0</span></div>
     </div>
 
     <!-- TAB 1: HOME -->
@@ -133,20 +139,15 @@
     <!-- TAB 2: MARKET -->
     <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
     
-    <!-- 💡 TAB 3: CASINO (JAUNAIS DICE) -->
+    <!-- TAB 3: CASINO (DICE) -->
     <div id="tab-casino" class="tab-content">
         <div class="missions-panel" style="padding-top: 10px;">
-            
-            <!-- Globālā Vēsture -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <span style="font-size: 10px; color: var(--grey); font-weight: 700;">🌐 LIVE ROLLS</span>
                 <i class="fas fa-circle" style="color: var(--green); font-size: 6px; animation: pulse 2s infinite;"></i>
             </div>
-            <div class="dice-history-bar" id="dice-history-ui">
-                <!-- Javascript šeit liks ciparus -->
-            </div>
+            <div class="dice-history-bar" id="dice-history-ui"></div>
 
-            <!-- Resursa Izvēle -->
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <div style="flex: 1;">
                     <label style="font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px;">RESURSS</label>
@@ -163,38 +164,20 @@
                 </div>
             </div>
 
-            <!-- Galvenais Slaideris -->
             <div class="dice-slider-container">
                 <input type="range" min="2" max="98" step="0.01" value="49.50" class="dice-slider" id="dice-slider" oninput="updateDiceMath()">
-                <div class="dice-markers">
-                    <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
-                </div>
+                <div class="dice-markers"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
             </div>
 
-            <!-- Ievades Lodziņi -->
             <div class="dice-input-group">
-                <div class="dice-input-box">
-                    <label>Likme</label>
-                    <input type="number" id="dice-bet" value="10" min="1" oninput="updateDiceMath()">
-                </div>
-                <div class="dice-input-box">
-                    <label>Laimests</label>
-                    <input type="text" id="dice-profit" value="19.80" readonly>
-                </div>
-                <div class="dice-input-box">
-                    <label>Reizinātājs</label>
-                    <input type="text" id="dice-multiplier" value="1.98x" readonly>
-                </div>
-                <div class="dice-input-box">
-                    <label>Iespējamība (%)</label>
-                    <input type="text" id="dice-chance" value="49.50" readonly>
-                </div>
+                <div class="dice-input-box"><label>Likme</label><input type="number" id="dice-bet" value="10" min="1" oninput="updateDiceMath()"></div>
+                <div class="dice-input-box"><label>Laimests</label><input type="text" id="dice-profit" value="19.80" readonly></div>
+                <div class="dice-input-box"><label>Reizinātājs</label><input type="text" id="dice-multiplier" value="1.98x" readonly></div>
+                <div class="dice-input-box"><label>Iespējamība (%)</label><input type="text" id="dice-chance" value="49.50" readonly></div>
             </div>
 
-            <!-- Rezultāts & Poga -->
             <div id="dice-result-msg" style="text-align: center; min-height: 25px; margin-bottom: 10px; font-weight: 700; font-size: 15px;"></div>
             <button class="btn-dice-roll" onclick="playDice()">BET</button>
-            
         </div>
     </div>
 
@@ -204,11 +187,29 @@
         <div id="buildings-list">Ielādē bāzes sistēmas...</div>
     </div>
 
-    <!-- TAB 5: MISSIONS -->
+    <!-- TAB 5: MISSIONS & PVP -->
     <div id="tab-missions" class="tab-content">
         <div class="missions-panel">
-            <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS</h3>
+            <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS (PvE)</h3>
             <div class="mission-grid" id="missions-list">Ielādē...</div>
+        </div>
+
+        <!-- 💡 JAUNAIS PVP BLOKS -->
+        <div class="missions-panel" style="border-color: var(--red); box-shadow: 0 0 10px rgba(255, 42, 42, 0.1);">
+            <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-crosshairs"></i> KIBER-KARI (PvP)</h3>
+            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz citu spēlētāju sistēmas un nozodz viņu resursus. Katrs uzbrukums patērē 1 Kiber-Proksiju.</p>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid #1a2639; margin-bottom: 15px;">
+                <div>
+                    <div style="font-weight:700; color:#fff;">IEGĀDĀTIES PROKSIJU</div>
+                    <span style="font-size:11px; color:var(--grey);">Izmaksas: 🛠️ 300 | 💾 100</span>
+                </div>
+                <button class="btn-upgrade" onclick="buyProxy()" style="width: 80px; border-color: var(--cyan); color: var(--cyan);">PIRKT (1)</button>
+            </div>
+
+            <div id="pvp-result-msg" style="text-align: center; min-height: 25px; margin-bottom: 10px; font-weight: 700; font-size: 14px;"></div>
+
+            <button class="btn-dice-roll" onclick="attackPlayer()" style="background: var(--red); color: #fff; box-shadow: 0 4px 15px rgba(255, 42, 42, 0.2);"><i class="fas fa-skull"></i> MEKLĒT UN UZBRUKT</button>
         </div>
     </div>
 
@@ -228,7 +229,7 @@
         const tgId = tg?.initDataUnsafe?.user?.id || 123456789;
 
         let serverData = null;
-        let diceCondition = 'under'; // under vai over
+        let diceCondition = 'under';
 
         const bNames = { mainframe: "Komandu Centrs", mine: "Lūžņu Pārstrāde", server: "Serveru Ferma", generator: "Ģeneratoru Bloks", firewall: "Ugunsmūris", lab: "Kiber-Laboratorija", vault: "Šifrēta Datu Velve", botnet: "Botnet Centrs" };
         const bStats = { mainframe: { bMetal: 200, bChips: 50, bEnergy: 0, bProd: 0 }, mine: { bMetal: 100, bChips: 0, bEnergy: 5, bProd: 80 }, server: { bMetal: 150, bChips: 40, bEnergy: 8, bProd: 40 }, generator: { bMetal: 120, bChips: 20, bEnergy: 0, bProd: 35 }, firewall: { bMetal: 180, bChips: 80, bEnergy: 4, bProd: 0 }, lab: { bMetal: 250, bChips: 150, bEnergy: 10, bProd: 0 }, vault: { bMetal: 300, bChips: 200, bEnergy: 6, bProd: 0 }, botnet: { bMetal: 500, bChips: 400, bEnergy: 15, bProd: 0 } };
@@ -241,7 +242,47 @@
             element.classList.add('active');
         }
 
-        // ==================== KAZINO DICE LOĢIKA ====================
+        // --- PVP FUNKCIJAS ---
+        async function buyProxy() {
+            const resDiv = document.getElementById('pvp-result-msg');
+            resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Pērk Kiber-Proksiju...</span>`;
+            try {
+                let res = await fetch(`${API_URL}/pvp/buy-proxy`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+                    body: JSON.stringify({ tgId: tgId })
+                });
+                let data = await res.json();
+                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
+                else {
+                    serverData = data.player;
+                    updateUI(serverData);
+                    resDiv.innerHTML = `<span style="color:var(--green)"><i class="fas fa-check"></i> ${data.message}</span>`;
+                }
+            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
+        }
+
+        async function attackPlayer() {
+            const resDiv = document.getElementById('pvp-result-msg');
+            resDiv.innerHTML = `<span style="color:var(--red);"><i class="fas fa-sync-alt fa-spin"></i> Meklē ievainojamības un uzbrūk...</span>`;
+            try {
+                let res = await fetch(`${API_URL}/pvp/attack`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+                    body: JSON.stringify({ tgId: tgId })
+                });
+                let data = await res.json();
+                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
+                else {
+                    serverData = data.player;
+                    updateUI(serverData);
+                    let col = data.isWin ? "var(--green)" : "var(--red)";
+                    resDiv.innerHTML = `<span class="roll-result-anim" style="color:${col}">${data.message}</span>`;
+                }
+            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
+        }
+
+        // --- DICE FUNKCIJAS ---
         function toggleDiceCondition() {
             diceCondition = diceCondition === 'under' ? 'over' : 'under';
             document.getElementById('dice-toggle').innerHTML = diceCondition === 'under' ? `ROLL UNDER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>` : `ROLL OVER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>`;
@@ -252,16 +293,9 @@
             const slider = document.getElementById('dice-slider');
             const target = parseFloat(slider.value);
             const bet = parseInt(document.getElementById('dice-bet').value) || 0;
-
-            // Kripto kazino stila slaidera krāsas atjaunināšana
             const percentage = target + "%";
-            if (diceCondition === 'under') {
-                slider.style.background = `linear-gradient(90deg, var(--green) ${percentage}, var(--red) ${percentage})`;
-            } else {
-                slider.style.background = `linear-gradient(90deg, var(--red) ${percentage}, var(--green) ${percentage})`;
-            }
+            slider.style.background = diceCondition === 'under' ? `linear-gradient(90deg, var(--green) ${percentage}, var(--red) ${percentage})` : `linear-gradient(90deg, var(--red) ${percentage}, var(--green) ${percentage})`;
 
-            // Matemātika: 1% House Edge
             let winChance = diceCondition === 'under' ? target : 99.99 - target;
             let multiplier = 99 / winChance;
             let profit = bet * multiplier;
@@ -275,10 +309,8 @@
             try {
                 let res = await fetch(`${API_URL}/casino/history`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
                 let data = await res.json();
-                
                 let html = "";
                 data.history.forEach(roll => {
-                    // Vienkāršs vizuāls noformējums vēsturei (zaļš > 50, sarkans < 50 čisto estētikai, jo īstais win ir atkarīgs no spēlētāja)
                     let cl = parseFloat(roll) >= 50 ? 'win' : 'loss';
                     html += `<div class="dice-history-item ${cl}">${roll}</div>`;
                 });
@@ -293,37 +325,28 @@
             const resDiv = document.getElementById('dice-result-msg');
 
             resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ripo...</span>`;
-
             try {
                 let res = await fetch(`${API_URL}/casino/play`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
-                    body: JSON.stringify({ 
-                        tgId: tgId, resource: resVal, betAmount: betVal, 
-                        target: targetVal, condition: diceCondition 
-                    })
+                    body: JSON.stringify({ tgId: tgId, resource: resVal, betAmount: betVal, target: targetVal, condition: diceCondition })
                 });
                 let data = await res.json();
 
-                if (data.error) {
-                    resDiv.innerHTML = `<span class="roll-result-anim" style="color:var(--red)">${data.error}</span>`;
-                } else {
+                if (data.error) resDiv.innerHTML = `<span class="roll-result-anim" style="color:var(--red)">${data.error}</span>`;
+                else {
                     serverData = data.player;
                     updateUI(serverData);
-                    
                     let col = data.isWin ? 'var(--green)' : 'var(--red)';
                     let sign = data.isWin ? '+' : '-';
                     let val = data.isWin ? data.winAmount : betVal;
-                    
                     resDiv.innerHTML = `<span class="roll-result-anim" style="color:${col}">[${data.roll}] ${sign}${val}</span>`;
-                    pollDiceHistory(); // Uzreiz ielādē jaunāko vēsturi ar tavu skaitli
+                    pollDiceHistory(); 
                 }
-            } catch (err) {
-                resDiv.innerHTML = `<span style="color:var(--red)">Servera kļūda</span>`;
-            }
+            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Servera kļūda</span>`; }
         }
-        // ==========================================================
 
+        // --- GALVENĀS SASKARNES FUNKCIJAS ---
         async function fetchPlayerData() {
             try {
                 let res = await fetch(`${API_URL}/player/${tgId}`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
@@ -344,6 +367,8 @@
             document.getElementById('val-chips').innerText = p.resources.silicon;
             document.getElementById('val-battery').innerText = p.resources.battery + "%";
             document.getElementById('val-gold').innerText = p.resources.gold;
+            document.getElementById('val-proxies').innerText = p.resources.proxies || 0; // Pievieno PROKSIJUS panelim
+
             document.getElementById('home-map-status').innerHTML = p.resources.battery === 0 ? `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>` : `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
 
             if(p.stats) {
@@ -465,7 +490,6 @@
         async function startMission(diff) { let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
         async function claimMission() { let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
 
-        // Sākuma Slaidera Inicializācija
         updateDiceMath();
 
         setInterval(() => {
@@ -477,7 +501,7 @@
         }, 1000);
 
         setInterval(fetchPlayerData, 5000);
-        setInterval(pollDiceHistory, 3000); // Ik pēc 3s ielādē jaunos globālos kauliņus
+        setInterval(pollDiceHistory, 3000); 
         
         fetchPlayerData();
         pollDiceHistory();
