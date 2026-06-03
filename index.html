@@ -42,8 +42,8 @@
 
         .building-item { background: var(--bg-panel); border: 1px solid var(--border-dark); margin: 0 15px 10px 15px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
         .building-locked { filter: grayscale(1) opacity(0.4); border-style: dashed; }
-        .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; }
-        .btn-upgrade:active { background: var(--cyan); color: #000; }
+        .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; transition: 0.2s; }
+        .btn-upgrade:active { background: var(--cyan); color: #000; transform: scale(0.95); }
         .btn-disabled { filter: grayscale(1); opacity: 0.5; pointer-events: none; }
         .btn-claim { background: rgba(0, 255, 102, 0.2); border-color: var(--green); color: var(--green); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0, 255, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); } }
@@ -52,9 +52,41 @@
         .prod-tag { font-size: 11px; color: var(--green); margin-top: 2px; display: block; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: var(--bg-panel); padding: 10px 0; border-top: 1px solid var(--border-dark); z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #556677; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-align: center; }
-        .nav-item i { font-size: 18px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #556677; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-align: center; transition: 0.3s; }
+        .nav-item i { font-size: 18px; transition: 0.3s; }
         .nav-item.active { color: var(--cyan); }
+        .nav-item.active i { transform: translateY(-3px); }
+
+        /* KAZINO ANIMĀCIJAS */
+        @keyframes flipCoin {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(720deg) scale(1.3); color: var(--yellow); }
+            100% { transform: rotateY(1440deg) scale(1); }
+        }
+        .anim-coinflip i { animation: flipCoin 1.2s ease-in-out infinite; font-size: 26px; }
+
+        @keyframes rollDice {
+            0% { transform: rotate(0deg) translateX(0); }
+            25% { transform: rotate(90deg) translateX(-15px); }
+            50% { transform: rotate(180deg) translateX(15px); color: var(--green); }
+            75% { transform: rotate(270deg) translateX(-15px); }
+            100% { transform: rotate(360deg) translateX(0); }
+        }
+        .anim-dice i { animation: rollDice 0.5s linear infinite; font-size: 26px; }
+
+        @keyframes spinSlots {
+            0% { transform: translateY(-5px); opacity: 0.7; }
+            50% { transform: translateY(5px); opacity: 1; color: var(--red); }
+            100% { transform: translateY(-5px); opacity: 0.7; }
+        }
+        .anim-slots { animation: spinSlots 0.2s linear infinite; font-size: 20px; font-weight: bold; letter-spacing: 4px; }
+
+        @keyframes popResult {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .result-pop { animation: popResult 0.4s ease-out forwards; display: inline-block; }
     </style>
 </head>
 <body>
@@ -72,6 +104,7 @@
         <div class="res-card c-gold"><i class="fas fa-dollar-sign"></i><span class="res-name">GOLD CHIPS</span><span class="res-val" id="val-gold">0</span></div>
     </div>
 
+    <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
         <div class="map-section">
             <div class="map-header"><span>Hacker Hideout</span><i class="fas fa-satellite-dish"></i></div>
@@ -106,14 +139,14 @@
         </div>
     </div>
 
+    <!-- TAB 2: MARKET -->
     <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
     
-<!-- TAB 3: CASINO -->
+    <!-- TAB 3: CASINO -->
     <div id="tab-casino" class="tab-content">
         <div class="missions-panel">
             <h3 style="margin: 0 0 10px 0; color: var(--yellow);"><i class="fas fa-dice"></i> CYBER-CASINO</h3>
             
-            <!-- Resursu un Likmes izvēle -->
             <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-dark); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                 <label style="font-size: 11px; color: var(--grey); font-weight: 700;">IZVĒLIES RESURSU:</label>
                 <select id="casino-resource" style="width: 100%; background: #070d18; color: #fff; border: 1px solid var(--cyan); padding: 8px; margin-top: 5px; margin-bottom: 10px; border-radius: 4px; font-family: inherit; outline: none;">
@@ -126,9 +159,9 @@
                 <input type="number" id="casino-bet" value="10" min="1" style="width: 100%; background: #070d18; color: #fff; border: 1px solid var(--cyan); padding: 8px; margin-top: 5px; border-radius: 4px; font-family: inherit; font-size: 14px; outline: none;">
             </div>
 
-            <!-- Rezultāta displejs -->
-            <div id="casino-result" style="text-align: center; margin-bottom: 15px; font-weight: 700; font-size: 14px; min-height: 20px; color: var(--cyan);">
-                Sagatavojies spēlei...
+            <!-- ANIMĒTAIS REZULTĀTA DISPLEJS -->
+            <div id="casino-result" style="text-align: center; margin-bottom: 15px; font-weight: 700; font-size: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(0, 240, 255, 0.05); border-radius: 8px; border: 1px dashed var(--cyan); color: var(--grey);">
+                Izvēlies spēli un veic likmi...
             </div>
 
             <div class="mission-grid">
@@ -157,7 +190,7 @@
                 <div class="mission-row">
                     <div>
                         <div style="font-weight:700; color:#fff;">CYBER SLOTS</div>
-                        <span style="font-size:11px; color:var(--grey);">Laimests: 1.5x līdz 5x</span>
+                        <span style="font-size:11px; color:var(--grey);">Laimests: 1.5x - 5x</span>
                     </div>
                     <button class="btn-upgrade" onclick="playCasino('slots', null)" style="width:95px; border-color:var(--red); color:var(--red);">SPIN</button>
                 </div>
@@ -165,11 +198,13 @@
         </div>
     </div>
     
+    <!-- TAB 4: BASE -->
     <div id="tab-base" class="tab-content">
         <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-server"></i> INFRASTRUKTŪRA</h3>
         <div id="buildings-list">Ielādē bāzes sistēmas...</div>
     </div>
 
+    <!-- TAB 5: MISSIONS -->
     <div id="tab-missions" class="tab-content">
         <div class="missions-panel">
             <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS</h3>
@@ -231,7 +266,6 @@
             document.getElementById('val-gold').innerText = p.resources.gold;
             document.getElementById('home-map-status').innerHTML = p.resources.battery === 0 ? `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>` : `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
 
-            // 💡 PIEVIENOTS: Atjaunojam statistiku galvenajā lapā (Home) no servera aprēķiniem
             if(p.stats) {
                 document.getElementById('home-stat-attack').innerText = p.stats.attack;
                 document.getElementById('home-stat-defense').innerText = p.stats.defense;
@@ -242,11 +276,9 @@
             renderHomeMonitors();
         }
 
-        // 💡 PIEVIENOTS: Jaunā funkcija, kas vada taimerus tieši pirmajā lapā (Home)
         function renderHomeMonitors() {
             if(!serverData) return;
             
-            // 1. Pārbaudām būvniecību
             const constr = serverData.construction;
             const constrEl = document.getElementById('home-proc-construction');
             if (constr) {
@@ -261,7 +293,6 @@
                 constrEl.style.color = "var(--grey)";
             }
 
-            // 2. Pārbaudām misijas
             const activeM = serverData.missions?.active;
             const missionEl = document.getElementById('home-proc-mission');
             if (activeM) {
@@ -394,29 +425,78 @@
         }
 
         async function upgradeBuilding(bKey) {
-            let res = await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, bKey: bKey }) });
+            let res = await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId, bKey: bKey }) });
             let data = await res.json();
             if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
         }
 
         async function startMission(diff) {
-            let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) });
+            let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) });
             let data = await res.json();
             if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
         }
 
         async function claimMission() {
-            let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId }) });
+            let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId }) });
             let data = await res.json();
             if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
         }
 
-        // Taimeru reāllaika atjaunošana visām sadaļām (ieskaitot jauno Home)
+        // 💡 PIEVIENOTS: Kazino spēļu funkcija ar animācijām
+        async function playCasino(game, choice) {
+            const resVal = document.getElementById('casino-resource').value;
+            const betVal = document.getElementById('casino-bet').value;
+            const resDiv = document.getElementById('casino-result');
+
+            if (!betVal || betVal <= 0) {
+                resDiv.innerHTML = `<span style="color:var(--red)">Lūdzu, ievadi derīgu likmi!</span>`;
+                return;
+            }
+
+            // 1. Vizualizācija (Animācijas sākums atkarībā no spēles)
+            resDiv.style.color = "var(--cyan)";
+            if (game === 'coinflip') {
+                resDiv.innerHTML = `<div class="anim-coinflip"><i class="fas fa-coins"></i></div><div style="margin-top:5px;">Met monētu...</div>`;
+            } else if (game === 'dice') {
+                resDiv.innerHTML = `<div class="anim-dice"><i class="fas fa-dice"></i></div><div style="margin-top:5px;">Met kauliņus...</div>`;
+            } else if (game === 'slots') {
+                resDiv.innerHTML = `<div class="anim-slots">🎰 [ ? | ? | ? ] 🎰</div><div style="margin-top:5px; font-size:12px;">Griež ruleti...</div>`;
+            }
+
+            try {
+                // 2. Veicam API pieprasījumu fonā
+                let res = await fetch(`${API_URL}/casino/play`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+                    body: JSON.stringify({ tgId: tgId, game: game, resource: resVal, betAmount: betVal, choice: choice })
+                });
+                
+                let data = await res.json();
+
+                // 3. Pēc 1.3 sekundēm pārtraucam animāciju un parādām rezultātu ("Pop" efekts)
+                setTimeout(() => {
+                    if (data.error) {
+                        resDiv.innerHTML = `<div class="result-pop"><span style="color:var(--red)"><i class="fas fa-exclamation-triangle"></i> ${data.error}</span></div>`;
+                    } else {
+                        serverData = data.player;
+                        updateUI(serverData);
+                        resDiv.innerHTML = `<div class="result-pop">${data.message}</div>`;
+                        resDiv.style.color = data.isWin ? "var(--green)" : "var(--red)";
+                    }
+                }, 1300);
+
+            } catch (err) {
+                setTimeout(() => {
+                    resDiv.innerHTML = `<div class="result-pop"><span style="color:var(--red)">Serveris neatbild.</span></div>`;
+                }, 1000);
+            }
+        }
+
         setInterval(() => {
             if (serverData) {
                 if (serverData.missions && serverData.missions.active) renderMissions();
                 if (serverData.construction) renderBuildings();
-                renderHomeMonitors(); // Atjaunojam galvenās lapas taimerus
+                renderHomeMonitors();
             }
         }, 1000);
 
