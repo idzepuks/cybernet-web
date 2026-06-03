@@ -18,7 +18,6 @@
         .top-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; font-size: 18px; color: var(--cyan); border-bottom: 1px solid var(--border-dark); background: var(--bg-panel); }
         .header-title { font-weight: 700; text-align: center; line-height: 1.1; letter-spacing: 1px; }
 
-        /* Tagad te ir 5 kolonnas, lai iekļautu Proksijus */
         .resources-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 15px; }
         .res-card { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 8px; padding: 10px 2px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .res-card i { font-size: 16px; margin-bottom: 5px; }
@@ -28,7 +27,7 @@
         .c-chips { border-color: var(--blue); color: var(--blue); }
         .c-battery { border-color: var(--green); color: var(--green); }
         .c-gold { border-color: var(--yellow); color: var(--yellow); }
-        .c-proxy { border-color: var(--red); color: var(--red); } /* Jaunais Proxy dizains */
+        .c-proxy { border-color: var(--red); color: var(--red); }
 
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
@@ -59,7 +58,7 @@
         .nav-item.active { color: var(--cyan); }
         .nav-item.active i { transform: translateY(-3px); }
 
-        /* DICE CSS (Saglabāts) */
+        /* DICE CSS */
         .dice-history-bar { display: flex; gap: 5px; overflow-x: hidden; padding: 10px; background: #070d18; border-radius: 6px; border: 1px solid var(--border-dark); margin-bottom: 15px; }
         .dice-history-item { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #fff; min-width: 45px; text-align: center; }
         .dice-history-item.win { color: var(--green); background: rgba(0, 231, 0, 0.1); border: 1px solid rgba(0, 231, 0, 0.2); }
@@ -93,7 +92,6 @@
         <i class="fas fa-user-circle"></i>
     </div>
 
-    <!-- MAINĪTS: 5 resursu bloki -->
     <div class="resources-grid">
         <div class="res-card c-metal"><i class="fas fa-hammer"></i><span class="res-name">METAL</span><span class="res-val" id="val-metal">0</span></div>
         <div class="res-card c-chips"><i class="fas fa-microchip"></i><span class="res-name">CHIPS</span><span class="res-val" id="val-chips">0</span></div>
@@ -102,7 +100,6 @@
         <div class="res-card c-proxy"><i class="fas fa-project-diagram"></i><span class="res-name">PROXIES</span><span class="res-val" id="val-proxies">0</span></div>
     </div>
 
-    <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
         <div class="map-section">
             <div class="map-header"><span>Hacker Hideout</span><i class="fas fa-satellite-dish"></i></div>
@@ -136,10 +133,8 @@
         </div>
     </div>
 
-    <!-- TAB 2: MARKET -->
     <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
     
-    <!-- TAB 3: CASINO (DICE) -->
     <div id="tab-casino" class="tab-content">
         <div class="missions-panel" style="padding-top: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
@@ -181,20 +176,17 @@
         </div>
     </div>
 
-    <!-- TAB 4: BASE -->
     <div id="tab-base" class="tab-content">
         <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-server"></i> INFRASTRUKTŪRA</h3>
         <div id="buildings-list">Ielādē bāzes sistēmas...</div>
     </div>
 
-    <!-- TAB 5: MISSIONS & PVP -->
     <div id="tab-missions" class="tab-content">
         <div class="missions-panel">
             <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS (PvE)</h3>
             <div class="mission-grid" id="missions-list">Ielādē...</div>
         </div>
 
-        <!-- 💡 JAUNAIS PVP BLOKS -->
         <div class="missions-panel" style="border-color: var(--red); box-shadow: 0 0 10px rgba(255, 42, 42, 0.1);">
             <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-crosshairs"></i> KIBER-KARI (PvP)</h3>
             <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz citu spēlētāju sistēmas un nozodz viņu resursus. Katrs uzbrukums patērē 1 Kiber-Proksiju.</p>
@@ -249,7 +241,7 @@
             try {
                 let res = await fetch(`${API_URL}/pvp/buy-proxy`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true' },
                     body: JSON.stringify({ tgId: tgId })
                 });
                 let data = await res.json();
@@ -268,7 +260,7 @@
             try {
                 let res = await fetch(`${API_URL}/pvp/attack`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true' },
                     body: JSON.stringify({ tgId: tgId })
                 });
                 let data = await res.json();
@@ -307,7 +299,7 @@
 
         async function pollDiceHistory() {
             try {
-                let res = await fetch(`${API_URL}/casino/history`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
+                let res = await fetch(`${API_URL}/casino/history`, { headers: {'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true'} });
                 let data = await res.json();
                 let html = "";
                 data.history.forEach(roll => {
@@ -328,7 +320,7 @@
             try {
                 let res = await fetch(`${API_URL}/casino/play`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true' },
                     body: JSON.stringify({ tgId: tgId, resource: resVal, betAmount: betVal, target: targetVal, condition: diceCondition })
                 });
                 let data = await res.json();
@@ -349,7 +341,7 @@
         // --- GALVENĀS SASKARNES FUNKCIJAS ---
         async function fetchPlayerData() {
             try {
-                let res = await fetch(`${API_URL}/player/${tgId}`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
+                let res = await fetch(`${API_URL}/player/${tgId}`, { headers: {'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true'} });
                 serverData = await res.json();
                 updateUI(serverData);
             } catch (err) {}
@@ -367,7 +359,7 @@
             document.getElementById('val-chips').innerText = p.resources.silicon;
             document.getElementById('val-battery').innerText = p.resources.battery + "%";
             document.getElementById('val-gold').innerText = p.resources.gold;
-            document.getElementById('val-proxies').innerText = p.resources.proxies || 0; // Pievieno PROKSIJUS panelim
+            document.getElementById('val-proxies').innerText = p.resources.proxies || 0;
 
             document.getElementById('home-map-status').innerHTML = p.resources.battery === 0 ? `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>` : `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
 
@@ -486,9 +478,41 @@
             document.getElementById('missions-list').innerHTML = mHtml;
         }
 
-        async function upgradeBuilding(bKey) { let res = await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, bKey: bKey }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
-        async function startMission(diff) { let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
-        async function claimMission() { let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
+        async function upgradeBuilding(bKey) { 
+            try {
+                let res = await fetch(`${API_URL}/upgrade`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true' }, 
+                    body: JSON.stringify({ tgId: tgId, bKey: bKey }) 
+                }); 
+                let data = await res.json(); 
+                if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } 
+            } catch (err) { alert("Savienojuma kļūda! Pārbaudi tuneli."); }
+        }
+
+        async function startMission(diff) { 
+            try {
+                let res = await fetch(`${API_URL}/mission/start`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true' }, 
+                    body: JSON.stringify({ tgId: tgId, difficulty: diff }) 
+                }); 
+                let data = await res.json(); 
+                if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } 
+            } catch (err) { alert("Savienojuma kļūda! Pārbaudi tuneli."); }
+        }
+
+        async function claimMission() { 
+            try {
+                let res = await fetch(`${API_URL}/mission/claim`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true', 'ngrok-skip-browser-warning': 'true' }, 
+                    body: JSON.stringify({ tgId: tgId }) 
+                }); 
+                let data = await res.json(); 
+                if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } 
+            } catch (err) { alert("Savienojuma kļūda! Pārbaudi tuneli."); }
+        }
 
         updateDiceMath();
 
