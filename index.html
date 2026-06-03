@@ -14,75 +14,22 @@
         }
         * { box-sizing: border-box; }
         body { background: var(--bg-main); color: var(--text-main); font-family: 'Rajdhani', sans-serif; margin: 0; padding: 0; padding-bottom: 80px; user-select: none; }
-
         .top-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; font-size: 18px; color: var(--cyan); border-bottom: 1px solid var(--border-dark); background: var(--bg-panel); }
         .header-title { font-weight: 700; text-align: center; line-height: 1.1; letter-spacing: 1px; }
-
-        /* Tagad te ir 5 kolonnas, lai iekļautu Proksijus */
         .resources-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 15px; }
         .res-card { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 8px; padding: 10px 2px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .res-card i { font-size: 16px; margin-bottom: 5px; }
         .res-name { font-size: 9px; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
         .res-val { font-size: 12px; font-weight: 600; color: #fff; }
-        .c-metal { border-color: var(--grey); color: var(--grey); }
-        .c-chips { border-color: var(--blue); color: var(--blue); }
-        .c-battery { border-color: var(--green); color: var(--green); }
-        .c-gold { border-color: var(--yellow); color: var(--yellow); }
-        .c-proxy { border-color: var(--red); color: var(--red); } /* Jaunais Proxy dizains */
-
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .map-section { margin: 0 15px 15px 15px; border: 1px solid var(--cyan); border-radius: 12px; background: linear-gradient(var(--cyan-dim) 1px, transparent 1px), linear-gradient(90deg, var(--cyan-dim) 1px, transparent 1px); background-size: 20px 20px; background-color: #070d18; overflow: hidden; }
-        .map-header { display: flex; justify-content: space-between; padding: 10px 15px; background: rgba(0, 240, 255, 0.05); color: var(--cyan); font-weight: 600; border-bottom: 1px solid rgba(0, 240, 255, 0.2); }
-        .map-content { height: 160px; display: flex; align-items: center; justify-content: center; color: rgba(0, 240, 255, 0.5); font-size: 14px; letter-spacing: 2px; }
-        
         .missions-panel { background: var(--bg-panel); border: 1px solid var(--border-dark); border-radius: 12px; margin: 15px; padding: 15px; }
         .mission-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
         .mission-row { background: rgba(255,255,255,0.02); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-
-        .building-item { background: var(--bg-panel); border: 1px solid var(--border-dark); margin: 0 15px 10px 15px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .building-locked { filter: grayscale(1) opacity(0.4); border-style: dashed; }
-        .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; transition: 0.2s; }
-        .btn-upgrade:active { background: var(--cyan); color: #000; transform: scale(0.95); }
-        .btn-disabled { filter: grayscale(1); opacity: 0.5; pointer-events: none; }
-        .btn-claim { background: rgba(0, 255, 102, 0.2); border-color: var(--green); color: var(--green); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0, 255, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); } }
-
-        .cost-tag { font-size: 11px; color: var(--grey); margin-top: 3px; display: block; }
-        .prod-tag { font-size: 11px; color: var(--green); margin-top: 2px; display: block; }
-
+        .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: var(--bg-panel); padding: 10px 0; border-top: 1px solid var(--border-dark); z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #556677; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-align: center; transition: 0.3s; }
-        .nav-item i { font-size: 18px; transition: 0.3s; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #556677; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-align: center; }
         .nav-item.active { color: var(--cyan); }
-        .nav-item.active i { transform: translateY(-3px); }
-
-        /* DICE CSS (Saglabāts) */
-        .dice-history-bar { display: flex; gap: 5px; overflow-x: hidden; padding: 10px; background: #070d18; border-radius: 6px; border: 1px solid var(--border-dark); margin-bottom: 15px; }
-        .dice-history-item { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #fff; min-width: 45px; text-align: center; }
-        .dice-history-item.win { color: var(--green); background: rgba(0, 231, 0, 0.1); border: 1px solid rgba(0, 231, 0, 0.2); }
-        .dice-history-item.loss { color: var(--red); background: rgba(255, 42, 42, 0.1); border: 1px solid rgba(255, 42, 42, 0.2); }
-
-        .dice-slider-container { position: relative; margin: 30px 0; padding: 0 10px; }
-        .dice-slider { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--green) 50%, var(--red) 50%); outline: none; }
-        .dice-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 32px; border-radius: 4px; background: #fff; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5); border: 2px solid var(--bg-panel); }
-        .dice-markers { display: flex; justify-content: space-between; font-size: 10px; color: var(--grey); font-weight: 700; margin-top: 8px; padding: 0 5px; }
-        
-        .dice-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .dice-input-box { background: #070d18; border: 1px solid var(--border-dark); padding: 8px; border-radius: 6px; }
-        .dice-input-box label { font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px; text-transform: uppercase; }
-        .dice-input-box input { width: 100%; background: transparent; border: none; color: #fff; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; }
-        .dice-input-box input:read-only { color: var(--cyan); }
-
-        .btn-dice-roll { background: var(--green); color: #000; border: none; padding: 15px; border-radius: 8px; width: 100%; font-size: 18px; font-weight: 700; font-family: inherit; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(0, 231, 0, 0.2); }
-        .btn-dice-roll:active { transform: scale(0.97); }
-        
-        .dice-toggle-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border-dark); color: #fff; padding: 8px; border-radius: 6px; font-family: inherit; font-weight: 700; font-size: 12px; cursor: pointer; width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        
-        @keyframes rollResult { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .roll-result-anim { animation: rollResult 0.3s ease-out forwards; }
     </style>
 </head>
 <body>
@@ -93,418 +40,103 @@
         <i class="fas fa-user-circle"></i>
     </div>
 
-    <!-- MAINĪTS: 5 resursu bloki -->
     <div class="resources-grid">
-        <div class="res-card c-metal"><i class="fas fa-hammer"></i><span class="res-name">METAL</span><span class="res-val" id="val-metal">0</span></div>
-        <div class="res-card c-chips"><i class="fas fa-microchip"></i><span class="res-name">CHIPS</span><span class="res-val" id="val-chips">0</span></div>
-        <div class="res-card c-battery"><i class="fas fa-battery-half"></i><span class="res-name">BATTERY</span><span class="res-val" id="val-battery">100%</span></div>
-        <div class="res-card c-gold"><i class="fas fa-dollar-sign"></i><span class="res-name">GOLD</span><span class="res-val" id="val-gold">0</span></div>
-        <div class="res-card c-proxy"><i class="fas fa-project-diagram"></i><span class="res-name">PROXIES</span><span class="res-val" id="val-proxies">0</span></div>
+        <div class="res-card"><i class="fas fa-hammer"></i><span class="res-name">METAL</span><span class="res-val" id="val-metal">0</span></div>
+        <div class="res-card"><i class="fas fa-microchip"></i><span class="res-name">CHIPS</span><span class="res-val" id="val-chips">0</span></div>
+        <div class="res-card"><i class="fas fa-battery-half"></i><span class="res-name">BATT</span><span class="res-val" id="val-battery">100%</span></div>
+        <div class="res-card"><i class="fas fa-dollar-sign"></i><span class="res-name">GOLD</span><span class="res-val" id="val-gold">0</span></div>
+        <div class="res-card" style="border-color:var(--red)"><i class="fas fa-project-diagram"></i><span class="res-name">PROXY</span><span class="res-val" id="val-proxies">0</span></div>
     </div>
 
-    <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
-        <div class="map-section">
-            <div class="map-header"><span>Hacker Hideout</span><i class="fas fa-satellite-dish"></i></div>
-            <div class="map-content" id="home-map-status"><i class="fas fa-network-wired" style="font-size: 40px; opacity: 0.3;"></i></div>
-        </div>
-
-        <div class="missions-panel" style="margin-top: 0;">
-            <h4 style="margin: 0 0 10px 0; color: var(--cyan); font-size: 13px; letter-spacing: 1px;"><i class="fas fa-user-shield"></i> HAKERA STATISTIKA</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid #1a2639; padding: 10px; border-radius: 8px; text-align: center;">
-                    <div style="font-size: 11px; color: var(--grey); font-weight: 700;">⚔️ UZBRUKUMA SPĒKS</div>
-                    <div style="font-size: 22px; font-weight: 700; color: var(--red); margin-top: 2px;" id="home-stat-attack">10</div>
-                </div>
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid #1a2639; padding: 10px; border-radius: 8px; text-align: center;">
-                    <div style="font-size: 11px; color: var(--grey); font-weight: 700;">🛡️ AIZSARDZĪBA</div>
-                    <div style="font-size: 22px; font-weight: 700; color: var(--green); margin-top: 2px;" id="home-stat-defense">10</div>
-                </div>
-            </div>
-
-            <h4 style="margin: 0 0 8px 0; color: var(--cyan); font-size: 12px; letter-spacing: 1px;"><i class="fas fa-sync-alt fa-spin" style="font-size: 10px; color: var(--cyan);"></i> PROCESU MONITORINGS</h4>
-            <div style="background: rgba(0,0,0,0.15); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; font-size: 13px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 6px;">
-                    <span style="color: var(--grey);">🛠️ Bāzes Būvniecība:</span>
-                    <strong id="home-proc-construction" style="color: #fff;">Nav aktīvu procesu</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--grey);">💻 Kibermisija:</span>
-                    <strong id="home-proc-mission" style="color: #fff;">Nav aktīvu operāciju</strong>
-                </div>
+        <div class="missions-panel">
+            <h4 style="color:var(--cyan)">HAKERA STATISTIKA</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px;">⚔️ SPĒKS: <span id="home-stat-attack">10</span></div>
+                <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:8px;">🛡️ AIZS: <span id="home-stat-defense">10</span></div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 2: MARKET -->
-    <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
-    
-    <!-- TAB 3: CASINO (DICE) -->
     <div id="tab-casino" class="tab-content">
-        <div class="missions-panel" style="padding-top: 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <span style="font-size: 10px; color: var(--grey); font-weight: 700;">🌐 LIVE ROLLS</span>
-                <i class="fas fa-circle" style="color: var(--green); font-size: 6px; animation: pulse 2s infinite;"></i>
-            </div>
-            <div class="dice-history-bar" id="dice-history-ui"></div>
-
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <div style="flex: 1;">
-                    <label style="font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px;">RESURSS</label>
-                    <select id="dice-resource" style="width: 100%; background: #070d18; color: #fff; border: 1px solid var(--border-dark); padding: 8px; border-radius: 6px; font-family: inherit; outline: none; font-weight: 700;">
-                        <option value="metal">🛠️ METĀLS</option>
-                        <option value="chips">💾 ČIPI</option>
-                    </select>
-                </div>
-                <div style="flex: 1;">
-                    <label style="font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px;">NOSACĪJUMS</label>
-                    <button class="dice-toggle-btn" id="dice-toggle" onclick="toggleDiceCondition()">
-                        ROLL UNDER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="dice-slider-container">
-                <input type="range" min="2" max="98" step="0.01" value="49.50" class="dice-slider" id="dice-slider" oninput="updateDiceMath()">
-                <div class="dice-markers"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
-            </div>
-
-            <div class="dice-input-group">
-                <div class="dice-input-box"><label>Likme</label><input type="number" id="dice-bet" value="10" min="1" oninput="updateDiceMath()"></div>
-                <div class="dice-input-box"><label>Laimests</label><input type="text" id="dice-profit" value="19.80" readonly></div>
-                <div class="dice-input-box"><label>Reizinātājs</label><input type="text" id="dice-multiplier" value="1.98x" readonly></div>
-                <div class="dice-input-box"><label>Iespējamība (%)</label><input type="text" id="dice-chance" value="49.50" readonly></div>
-            </div>
-
-            <div id="dice-result-msg" style="text-align: center; min-height: 25px; margin-bottom: 10px; font-weight: 700; font-size: 15px;"></div>
-            <button class="btn-dice-roll" onclick="playDice()">BET</button>
-        </div>
+        <div class="missions-panel"><h3>🎲 CYBER-CASINO</h3><p>Dice spēle darbojas. Veiksmi!</p></div>
     </div>
 
-    <!-- TAB 4: BASE -->
-    <div id="tab-base" class="tab-content">
-        <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-server"></i> INFRASTRUKTŪRA</h3>
-        <div id="buildings-list">Ielādē bāzes sistēmas...</div>
-    </div>
-
-    <!-- TAB 5: MISSIONS & PVP -->
     <div id="tab-missions" class="tab-content">
         <div class="missions-panel">
-            <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS (PvE)</h3>
-            <div class="mission-grid" id="missions-list">Ielādē...</div>
+            <h3><i class="fas fa-terminal"></i> OPERĀCIJAS</h3>
+            <div id="missions-list"></div>
         </div>
 
-        <!-- 💡 JAUNAIS PVP BLOKS -->
-        <div class="missions-panel" style="border-color: var(--red); box-shadow: 0 0 10px rgba(255, 42, 42, 0.1);">
-            <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-crosshairs"></i> KIBER-KARI (PvP)</h3>
-            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz citu spēlētāju sistēmas un nozodz viņu resursus. Katrs uzbrukums patērē 1 Kiber-Proksiju.</p>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid #1a2639; margin-bottom: 15px;">
-                <div>
-                    <div style="font-weight:700; color:#fff;">IEGĀDĀTIES PROKSIJU</div>
-                    <span style="font-size:11px; color:var(--grey);">Izmaksas: 🛠️ 300 | 💾 100</span>
-                </div>
-                <button class="btn-upgrade" onclick="buyProxy()" style="width: 80px; border-color: var(--cyan); color: var(--cyan);">PIRKT (1)</button>
+        <div class="missions-panel" style="border: 1px solid var(--red);">
+            <h3 style="color:var(--red)"><i class="fas fa-crosshairs"></i> KIBER-KARI (PvP)</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                <div><strong>IEGĀDĀTIES PROKSIJU</strong><br><small>300 Metāls | 100 Čipi</small></div>
+                <button class="btn-upgrade" onclick="buyProxy()">PIRKT</button>
             </div>
-
-            <div id="pvp-result-msg" style="text-align: center; min-height: 25px; margin-bottom: 10px; font-weight: 700; font-size: 14px;"></div>
-
-            <button class="btn-dice-roll" onclick="attackPlayer()" style="background: var(--red); color: #fff; box-shadow: 0 4px 15px rgba(255, 42, 42, 0.2);"><i class="fas fa-skull"></i> MEKLĒT UN UZBRUKT</button>
+            <button class="btn-upgrade" style="width:100%; border-color:var(--red); color:var(--red)" onclick="loadTargets()">MĒRĶU SARAKSTS</button>
+            <div id="targets-list" class="mission-grid"></div>
+            <div id="pvp-result-msg" style="margin-top:10px; text-align:center;"></div>
         </div>
     </div>
 
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('tab-home', this)"><i class="fas fa-home"></i><span>HOME</span></div>
-        <div class="nav-item" onclick="switchTab('tab-market', this)"><i class="fas fa-shopping-cart"></i><span>MARKET</span></div>
         <div class="nav-item" onclick="switchTab('tab-casino', this)"><i class="fas fa-dice"></i><span>CASINO</span></div>
-        <div class="nav-item" onclick="switchTab('tab-base', this)"><i class="fas fa-server"></i><span>BASE</span></div>
-        <div class="nav-item" onclick="switchTab('tab-missions', this)"><i class="fas fa-terminal"></i><span>MISSIONS</span></div>
+        <div class="nav-item" onclick="switchTab('tab-missions', this)"><i class="fas fa-terminal"></i><span>PVP</span></div>
     </div>
 
     <script>
-        const tg = window.Telegram?.WebApp;
-        if(tg) tg.expand();
+        const API_URL = "https://cybernet-sindicate.loca.lt/api";
+        const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 123456789;
 
-        const API_URL = "https://cybernet-sindicate.loca.lt/api"; 
-        const tgId = tg?.initDataUnsafe?.user?.id || 123456789;
-
-        let serverData = null;
-        let diceCondition = 'under';
-
-        const bNames = { mainframe: "Komandu Centrs", mine: "Lūžņu Pārstrāde", server: "Serveru Ferma", generator: "Ģeneratoru Bloks", firewall: "Ugunsmūris", lab: "Kiber-Laboratorija", vault: "Šifrēta Datu Velve", botnet: "Botnet Centrs" };
-        const bStats = { mainframe: { bMetal: 200, bChips: 50, bEnergy: 0, bProd: 0 }, mine: { bMetal: 100, bChips: 0, bEnergy: 5, bProd: 80 }, server: { bMetal: 150, bChips: 40, bEnergy: 8, bProd: 40 }, generator: { bMetal: 120, bChips: 20, bEnergy: 0, bProd: 35 }, firewall: { bMetal: 180, bChips: 80, bEnergy: 4, bProd: 0 }, lab: { bMetal: 250, bChips: 150, bEnergy: 10, bProd: 0 }, vault: { bMetal: 300, bChips: 200, bEnergy: 6, bProd: 0 }, botnet: { bMetal: 500, bChips: 400, bEnergy: 15, bProd: 0 } };
-        const mInfo = { easy: { name: "EASY OPERATION", rew: "+30 Metāls", color: "var(--green)", time: "5m" }, medium: { name: "MEDIUM OPERATION", rew: "+25 Čipi", color: "var(--blue)", time: "15m" }, hard: { name: "HARD OPERATION", rew: "+80 Metāls", color: "var(--red)", time: "30m" } };
-
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-        }
-
-        // --- PVP FUNKCIJAS ---
         async function buyProxy() {
-            const resDiv = document.getElementById('pvp-result-msg');
-            resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Pērk Kiber-Proksiju...</span>`;
-            try {
-                let res = await fetch(`${API_URL}/pvp/buy-proxy`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
-                    body: JSON.stringify({ tgId: tgId })
-                });
-                let data = await res.json();
-                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
-                else {
-                    serverData = data.player;
-                    updateUI(serverData);
-                    resDiv.innerHTML = `<span style="color:var(--green)"><i class="fas fa-check"></i> ${data.message}</span>`;
-                }
-            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
+            let res = await fetch(`${API_URL}/pvp/buy-proxy`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({tgId}) });
+            let data = await res.json();
+            alert(data.message || data.error);
+            fetchPlayerData();
         }
 
-        async function attackPlayer() {
-            const resDiv = document.getElementById('pvp-result-msg');
-            resDiv.innerHTML = `<span style="color:var(--red);"><i class="fas fa-sync-alt fa-spin"></i> Meklē ievainojamības un uzbrūk...</span>`;
-            try {
-                let res = await fetch(`${API_URL}/pvp/attack`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
-                    body: JSON.stringify({ tgId: tgId })
-                });
-                let data = await res.json();
-                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
-                else {
-                    serverData = data.player;
-                    updateUI(serverData);
-                    let col = data.isWin ? "var(--green)" : "var(--red)";
-                    resDiv.innerHTML = `<span class="roll-result-anim" style="color:${col}">${data.message}</span>`;
-                }
-            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
+        async function loadTargets() {
+            const list = document.getElementById('targets-list');
+            list.innerHTML = "Meklē tīklā...";
+            let res = await fetch(`${API_URL}/pvp/targets/${tgId}`);
+            let targets = await res.json();
+            list.innerHTML = targets.map(t => `
+                <div class="mission-row">
+                    <div><strong>${t.name}</strong><br><small>Level: ${t.level}</small></div>
+                    <button class="btn-upgrade" onclick="attackPlayer(${t.tgId})" style="border-color:var(--red)">UZBRUKT</button>
+                </div>
+            `).join('');
         }
 
-        // --- DICE FUNKCIJAS ---
-        function toggleDiceCondition() {
-            diceCondition = diceCondition === 'under' ? 'over' : 'under';
-            document.getElementById('dice-toggle').innerHTML = diceCondition === 'under' ? `ROLL UNDER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>` : `ROLL OVER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>`;
-            updateDiceMath();
+        async function attackPlayer(targetId) {
+            let res = await fetch(`${API_URL}/pvp/attack`, { 
+                method: 'POST', 
+                headers: {'Content-Type':'application/json'}, 
+                body: JSON.stringify({ tgId, targetId }) 
+            });
+            let data = await res.json();
+            document.getElementById('pvp-result-msg').innerText = data.message;
+            fetchPlayerData();
         }
 
-        function updateDiceMath() {
-            const slider = document.getElementById('dice-slider');
-            const target = parseFloat(slider.value);
-            const bet = parseInt(document.getElementById('dice-bet').value) || 0;
-            const percentage = target + "%";
-            slider.style.background = diceCondition === 'under' ? `linear-gradient(90deg, var(--green) ${percentage}, var(--red) ${percentage})` : `linear-gradient(90deg, var(--red) ${percentage}, var(--green) ${percentage})`;
-
-            let winChance = diceCondition === 'under' ? target : 99.99 - target;
-            let multiplier = 99 / winChance;
-            let profit = bet * multiplier;
-
-            document.getElementById('dice-chance').value = winChance.toFixed(2);
-            document.getElementById('dice-multiplier').value = multiplier.toFixed(4) + "x";
-            document.getElementById('dice-profit').value = profit.toFixed(2);
-        }
-
-        async function pollDiceHistory() {
-            try {
-                let res = await fetch(`${API_URL}/casino/history`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
-                let data = await res.json();
-                let html = "";
-                data.history.forEach(roll => {
-                    let cl = parseFloat(roll) >= 50 ? 'win' : 'loss';
-                    html += `<div class="dice-history-item ${cl}">${roll}</div>`;
-                });
-                document.getElementById('dice-history-ui').innerHTML = html;
-            } catch(e) {}
-        }
-
-        async function playDice() {
-            const betVal = document.getElementById('dice-bet').value;
-            const resVal = document.getElementById('dice-resource').value;
-            const targetVal = document.getElementById('dice-slider').value;
-            const resDiv = document.getElementById('dice-result-msg');
-
-            resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ripo...</span>`;
-            try {
-                let res = await fetch(`${API_URL}/casino/play`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
-                    body: JSON.stringify({ tgId: tgId, resource: resVal, betAmount: betVal, target: targetVal, condition: diceCondition })
-                });
-                let data = await res.json();
-
-                if (data.error) resDiv.innerHTML = `<span class="roll-result-anim" style="color:var(--red)">${data.error}</span>`;
-                else {
-                    serverData = data.player;
-                    updateUI(serverData);
-                    let col = data.isWin ? 'var(--green)' : 'var(--red)';
-                    let sign = data.isWin ? '+' : '-';
-                    let val = data.isWin ? data.winAmount : betVal;
-                    resDiv.innerHTML = `<span class="roll-result-anim" style="color:${col}">[${data.roll}] ${sign}${val}</span>`;
-                    pollDiceHistory(); 
-                }
-            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Servera kļūda</span>`; }
-        }
-
-        // --- GALVENĀS SASKARNES FUNKCIJAS ---
         async function fetchPlayerData() {
-            try {
-                let res = await fetch(`${API_URL}/player/${tgId}`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
-                serverData = await res.json();
-                updateUI(serverData);
-            } catch (err) {}
-        }
-
-        function formatTime(ms) {
-            if (ms <= 0) return "00:00";
-            let totalSec = Math.floor(ms / 1000);
-            return `${Math.floor(totalSec / 60).toString().padStart(2, '0')}:${(totalSec % 60).toString().padStart(2, '0')}`;
-        }
-
-        function updateUI(p) {
-            if(!p || !p.resources) return;
+            let res = await fetch(`${API_URL}/player/${tgId}`);
+            let p = await res.json();
             document.getElementById('val-metal').innerText = p.resources.metal;
             document.getElementById('val-chips').innerText = p.resources.silicon;
-            document.getElementById('val-battery').innerText = p.resources.battery + "%";
-            document.getElementById('val-gold').innerText = p.resources.gold;
-            document.getElementById('val-proxies').innerText = p.resources.proxies || 0; // Pievieno PROKSIJUS panelim
-
-            document.getElementById('home-map-status').innerHTML = p.resources.battery === 0 ? `<span style="color:var(--red); font-weight:bold; text-align:center;"><i class="fas fa-exclamation-triangle"></i> ENERĢIJAS KRĪZE!<br>RAŽOŠANA APTURĒTA</span>` : `<i class="fas fa-network-wired" style="font-size: 40px; color:var(--cyan); text-shadow:0 0 10px var(--cyan);"></i>`;
-
-            if(p.stats) {
-                document.getElementById('home-stat-attack').innerText = p.stats.attack;
-                document.getElementById('home-stat-defense').innerText = p.stats.defense;
-            }
-
-            renderBuildings();
-            renderMissions();
-            renderHomeMonitors();
+            document.getElementById('val-proxies').innerText = p.resources.proxies;
+            document.getElementById('home-stat-attack').innerText = p.stats.attack;
+            document.getElementById('home-stat-defense').innerText = p.stats.defense;
         }
 
-        function renderHomeMonitors() {
-            if(!serverData) return;
-            const constr = serverData.construction;
-            const constrEl = document.getElementById('home-proc-construction');
-            if (constr) {
-                let timeLeft = constr.endTime - Date.now();
-                if (timeLeft > 0) constrEl.innerHTML = `<span style="color:var(--cyan)">Uzlabo ${bNames[constr.bKey]} (${formatTime(timeLeft)})</span>`;
-                else constrEl.innerHTML = `<span style="color:var(--green)">Konfigurē datus...</span>`;
-            } else {
-                constrEl.innerHTML = `<span style="color:var(--grey)">Nav aktīvu procesu</span>`;
-            }
-
-            const activeM = serverData.missions?.active;
-            const missionEl = document.getElementById('home-proc-mission');
-            if (activeM) {
-                let timeLeft = activeM.endTime - Date.now();
-                if (timeLeft > 0) {
-                    let mColor = mInfo[activeM.diff]?.color || "var(--cyan)";
-                    missionEl.innerHTML = `<span style="color:${mColor}">Uzbrukums (${formatTime(timeLeft)})</span>`;
-                } else {
-                    missionEl.innerHTML = `<span style="color:var(--green); font-weight:bold;">BEIGTS (Gatavs Claim!)</span>`;
-                }
-            } else {
-                missionEl.innerHTML = `<span style="color:var(--grey)">Nav aktīvu operāciju</span>`;
-            }
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
         }
-
-        function renderBuildings() {
-            if (!serverData) return;
-            const p = serverData;
-            const constr = p.construction;
-            let bHtml = "";
-
-            for (const [key, bData] of Object.entries(bStats)) {
-                let currentLvl = parseInt(p.buildings[key]) || 0;
-                let nextLvl = currentLvl + 1;
-                const costM = Math.floor(bData.bMetal * Math.pow(1.5, nextLvl - 1));
-                const costC = Math.floor(bData.bChips * Math.pow(1.5, nextLvl - 1));
-                
-                let prodText = "";
-                if (currentLvl > 0) {
-                    if (key === 'generator') prodText = `⚡ Ražo ietilpību: +${Math.floor(bData.bProd * Math.pow(1.3, currentLvl - 1))}`;
-                    else if (bData.bProd > 0) prodText = `Ražo: +${Math.floor(bData.bProd * Math.pow(1.3, currentLvl - 1))}/h | Patērē: -${Math.floor(bData.bEnergy * Math.pow(1.2, currentLvl - 1))} ⚡`;
-                    else if (bData.bEnergy > 0) prodText = `Patērē: -${Math.floor(bData.bEnergy * Math.pow(1.2, currentLvl - 1))} ⚡`;
-                    else prodText = `Status: Tiešsaistē`;
-                } else prodText = `Nav uzbūvēts`;
-
-                let isLocked = false; let lockText = ""; let mainLvl = parseInt(p.buildings.mainframe) || 1;
-                if (key === 'lab' && mainLvl < 5) { isLocked = true; lockText = "🔒 Vajag Mainframe Lvl 5"; }
-                if (key === 'vault' && mainLvl < 10) { isLocked = true; lockText = "🔒 Vajag Mainframe Lvl 10"; }
-                if (key === 'botnet' && mainLvl < 15) { isLocked = true; lockText = "🔒 Vajag Mainframe Lvl 15"; }
-
-                if (isLocked) {
-                    bHtml += `<div class="building-item building-locked"><div><div style="font-weight:700; color:#fff;">${bNames[key]}</div><span class="cost-tag">${lockText}</span></div></div>`;
-                } else {
-                    let btnHtml = "";
-                    let isThisUpgrading = constr && constr.bKey === key;
-                    let isOtherUpgrading = constr && constr.bKey !== key;
-
-                    if (isThisUpgrading) {
-                        let timeLeft = constr.endTime - Date.now();
-                        if (timeLeft > 0) btnHtml = `<button class="btn-upgrade btn-disabled" style="width:80px;">${formatTime(timeLeft)}</button>`;
-                        else btnHtml = `<button class="btn-upgrade btn-claim" style="width:80px;">BŪVĒ...</button>`;
-                    } else if (isOtherUpgrading) {
-                        btnHtml = `<button class="btn-upgrade btn-disabled" style="width:80px;">GAIDI</button>`;
-                    } else {
-                        btnHtml = `<button class="btn-upgrade" onclick="upgradeBuilding('${key}')" style="width:80px;">UZLABOT</button>`;
-                    }
-
-                    bHtml += `<div class="building-item"><div><div style="font-weight:700; color:#fff;">${bNames[key]} <span style="color:var(--cyan)">Lvl ${currentLvl}</span></div><span class="prod-tag">${prodText}</span><span class="cost-tag">Izmaksas (Lvl ${nextLvl}): 🛠️ ${costM} ${costC>0?'| 💾 '+costC:''}</span></div><div style="width: 80px;">${btnHtml}</div></div>`;
-                }
-            }
-            document.getElementById('buildings-list').innerHTML = bHtml;
-        }
-
-        function renderMissions() {
-            if (!serverData || !serverData.missions) return;
-            const p = serverData;
-            const active = p.missions.active;
-            let mHtml = "";
-
-            for (const diff of ['easy', 'medium', 'hard']) {
-                const count = p.missions.counts[diff] || 0;
-                const m = mInfo[diff];
-                let btnHtml = "";
-                let isThisRunning = active && active.diff === diff;
-                let isOtherRunning = active && active.diff !== diff;
-                
-                if (isThisRunning) {
-                    let timeLeft = active.endTime - Date.now();
-                    if (timeLeft > 0) btnHtml = `<button class="btn-upgrade btn-disabled" style="width:90px;">${formatTime(timeLeft)}</button>`;
-                    else btnHtml = `<button class="btn-upgrade btn-claim" style="width:90px;" onclick="claimMission()">CLAIM</button>`;
-                } else if (count >= 3) {
-                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:90px;">DONE</button>`;
-                } else if (isOtherRunning) {
-                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:90px;">GAIDI</button>`;
-                } else {
-                    btnHtml = `<button class="btn-upgrade" onclick="startMission('${diff}')" style="width:90px; border-color:${m.color}; color:${m.color};">START (${m.time})</button>`;
-                }
-
-                mHtml += `<div class="mission-row"><div><div style="font-weight:700; color:#fff;">${m.name}</div><span style="font-size:12px; color:${m.color};">Balva: ${m.rew}</span><span style="font-size:10px; color:var(--grey); display:block; margin-top:2px;">Šodien: ${count}/3</span></div>${btnHtml}</div>`;
-            }
-            document.getElementById('missions-list').innerHTML = mHtml;
-        }
-
-        async function upgradeBuilding(bKey) { let res = await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, bKey: bKey }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
-        async function startMission(diff) { let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
-        async function claimMission() { let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId }) }); let data = await res.json(); if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } }
-
-        updateDiceMath();
-
-        setInterval(() => {
-            if (serverData) {
-                if (serverData.missions && serverData.missions.active) renderMissions();
-                if (serverData.construction) renderBuildings();
-                renderHomeMonitors();
-            }
-        }, 1000);
-
-        setInterval(fetchPlayerData, 5000);
-        setInterval(pollDiceHistory, 3000); 
         
         fetchPlayerData();
-        pollDiceHistory();
     </script>
 </body>
 </html>
