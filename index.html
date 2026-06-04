@@ -18,8 +18,8 @@
         .slider-group { margin-bottom: 15px; }
         .slider-group label { display: flex; justify-content: space-between; font-size: 11px; color: var(--grey); font-weight: bold; }
         input[type=range] { width: 100%; margin-top: 5px; accent-color: var(--cyan); }
-        .btn { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 10px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: var(--bg-panel); padding: 10px 0; border-top: 1px solid var(--border-dark); }
+        .btn { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: var(--bg-panel); padding: 10px 0; border-top: 1px solid var(--border-dark); z-index: 100; }
         .nav-item { color: var(--grey); text-align: center; font-size: 10px; flex: 1; cursor: pointer; }
         .nav-item.active { color: var(--cyan); }
     </style>
@@ -27,64 +27,56 @@
 <body>
 
     <div class="top-header">
+        <i class="fas fa-bars"></i>
         <div style="font-weight: bold;">CYBERNET SYNDICATE</div>
+        <i class="fas fa-user-circle"></i>
     </div>
 
     <div class="resources-grid">
-        <div class="res-card"><span class="res-val" id="v-metal">0</span><span style="font-size:8px; color:var(--grey)">METAL</span></div>
-        <div class="res-card"><span class="res-val" id="v-chips">0</span><span style="font-size:8px; color:var(--grey)">CHIPS</span></div>
-        <div class="res-card"><span class="res-val" id="v-gold">0</span><span style="font-size:8px; color:#ffcc00">KREDĪTI</span></div>
-        <div class="res-card"><span class="res-val" id="v-res">0</span><span style="font-size:8px; color:#c77dff">PĒT.</span></div>
-        <div class="res-card"><span class="res-val" id="v-pop">0/0</span><span style="font-size:8px; color:var(--cyan)">POP.</span></div>
+        <div class="res-card"><span class="res-val" id="v-metal">0</span><span style="font-size:9px; color:var(--grey)">METAL</span></div>
+        <div class="res-card"><span class="res-val" id="v-chips">0</span><span style="font-size:9px; color:var(--grey)">CHIPS</span></div>
+        <div class="res-card"><span class="res-val" id="v-gold">0</span><span style="font-size:9px; color:#ffcc00">CRED</span></div>
+        <div class="res-card"><span class="res-val" id="v-res">0</span><span style="font-size:9px; color:#c77dff">RES</span></div>
+        <div class="res-card"><span class="res-val" id="v-pop">0/0</span><span style="font-size:9px; color:var(--cyan)">POP</span></div>
     </div>
 
     <div id="tab-home" class="tab-content active">
         <div class="panel">
-            <h4 style="margin-top:0; color:var(--cyan);"><i class="fas fa-users"></i> KIBER-PILSOŅU PĀRVALDE</h4>
-            <p style="font-size:12px; color:var(--grey);">Brīvie aģenti: <span id="free-agents" style="color:#fff;">0</span></p>
-            <div class="slider-group">
-                <label><span>Metāla raktuves</span><span id="txt-mWork">0</span></label>
-                <input type="range" id="sl-mWork" min="0" max="0" value="0" oninput="updateSliders()">
-            </div>
-            <div class="slider-group">
-                <label><span>Serveru ferma (Čipi)</span><span id="txt-cWork">0</span></label>
-                <input type="range" id="sl-cWork" min="0" max="0" value="0" oninput="updateSliders()">
-            </div>
-            <div class="slider-group">
-                <label><span>Neural Hub (Pētniecība)</span><span id="txt-sWork">0</span></label>
-                <input type="range" id="sl-sWork" min="0" max="0" value="0" oninput="updateSliders()">
-            </div>
+            <h3 style="margin-top:0; color:var(--cyan);"><i class="fas fa-users"></i> KIBER-PILSOŅU SADALE</h3>
+            <p style="font-size:12px; color:var(--grey);">Brīvie aģenti: <span id="free-agents" style="color:#fff; font-weight:bold;">0</span></p>
+            <div class="slider-group"><label><span>Metāla raktuves</span><span id="txt-mWork">0</span></label><input type="range" id="sl-mWork" min="0" max="0" value="0" oninput="updateSliders()"></div>
+            <div class="slider-group"><label><span>Serveru ferma</span><span id="txt-cWork">0</span></label><input type="range" id="sl-cWork" min="0" max="0" value="0" oninput="updateSliders()"></div>
+            <div class="slider-group"><label><span>Neural Hub (Zinātnieki)</span><span id="txt-sWork">0</span></label><input type="range" id="sl-sWork" min="0" max="0" value="0" oninput="updateSliders()"></div>
             <button class="btn" onclick="saveWorkers()">APSTIPRINĀT SADALI</button>
             <div id="worker-msg" style="text-align:center; font-size:12px; margin-top:10px; color:var(--green);"></div>
         </div>
     </div>
 
     <div id="tab-base" class="tab-content">
-        <h3 style="color: var(--cyan); margin-left: 15px;">INFRASTRUKTŪRA</h3>
+        <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-server"></i> INFRASTRUKTŪRA</h3>
         <div id="buildings-list"></div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('tab-home', this)">HOME</div>
-        <div class="nav-item" onclick="switchTab('tab-base', this)">BASE</div>
-        <div class="nav-item" onclick="switchTab('tab-missions', this)">MISSIONS</div>
+        <div class="nav-item active" onclick="switchTab('tab-home', this)"><i class="fas fa-home"></i><br>HOME</div>
+        <div class="nav-item" onclick="switchTab('tab-base', this)"><i class="fas fa-server"></i><br>BASE</div>
     </div>
 
     <script>
-        const API_URL = "https://cybernet-sindicate.loca.lt/api";
-        const tgId = 123456789; // Šeit jābūt tavam lietotāja ID
+        const API_URL = "https://cybernet-sindicate.loca.lt/api"; 
+        const tgId = 123456789; 
         let serverData = null;
 
-        function switchTab(tabId, el) {
+        function switchTab(id, el) {
             document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(id).classList.add('active');
             el.classList.add('active');
         }
 
         async function fetchPlayerData() {
             try {
-                let res = await fetch(`${API_URL}/player/${tgId}`);
+                let res = await fetch(`${API_URL}/player/${tgId}`, { headers: {'Bypass-Tunnel-Reminder': 'true'} });
                 serverData = await res.json();
                 updateUI();
             } catch (err) {}
@@ -92,20 +84,20 @@
 
         function updateUI() {
             if(!serverData) return;
-            document.getElementById('v-metal').innerText = serverData.resources.metal;
-            document.getElementById('v-chips').innerText = serverData.resources.silicon;
-            document.getElementById('v-gold').innerText = serverData.resources.gold;
-            document.getElementById('v-res').innerText = serverData.resources.research;
-            
-            // Iedzīvotāju limiti
-            const b = serverData.buildings;
-            let maxPop = Math.floor(60 + (b.sector_hub * 20) + Math.pow(b.sector_hub, 1.5) * 5);
-            document.getElementById('v-pop').innerText = `${Math.floor(serverData.population.total)}/${maxPop}`;
+            const r = serverData.resources, p = serverData.population, b = serverData.buildings;
+            document.getElementById('v-metal').innerText = r.metal;
+            document.getElementById('v-chips').innerText = r.silicon;
+            document.getElementById('v-gold').innerText = r.gold;
+            document.getElementById('v-res').innerText = r.research;
 
-            // Uzstādām slīdņu maksimālās vērtības
-            document.getElementById('sl-mWork').max = (b.mine || 0) * 30;
-            document.getElementById('sl-cWork').max = (b.server || 0) * 30;
-            document.getElementById('sl-sWork').max = serverData.buildings.neural_hub === 0 ? 0 : 4 + (serverData.buildings.neural_hub * 4);
+            // Kapacitātes kalkulācija (vienkāršota)
+            let maxPop = Math.floor(60 + (b.sector_hub * 20) + Math.pow(b.sector_hub, 1.5) * 5);
+            document.getElementById('v-pop').innerText = `${Math.floor(p.total)}/${maxPop}`;
+
+            // Uzstāda slīdņus
+            document.getElementById('sl-mWork').max = Math.floor(p.total);
+            document.getElementById('sl-cWork').max = Math.floor(p.total);
+            document.getElementById('sl-sWork').max = Math.floor(p.total);
             
             updateSliders();
             renderBuildings();
@@ -115,10 +107,11 @@
             let mW = parseInt(document.getElementById('sl-mWork').value);
             let cW = parseInt(document.getElementById('sl-cWork').value);
             let sW = parseInt(document.getElementById('sl-sWork').value);
+            let free = Math.floor(serverData.population.total) - (mW + cW + sW);
+            document.getElementById('free-agents').innerText = free >= 0 ? free : "LIMITS!";
             document.getElementById('txt-mWork').innerText = mW;
             document.getElementById('txt-cWork').innerText = cW;
             document.getElementById('txt-sWork').innerText = sW;
-            document.getElementById('free-agents').innerText = Math.floor(serverData.population.total) - (mW + cW + sW);
         }
 
         async function saveWorkers() {
@@ -127,23 +120,26 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ tgId, mWork: document.getElementById('sl-mWork').value, cWork: document.getElementById('sl-cWork').value, sWork: document.getElementById('sl-sWork').value })
             });
+            alert("Saglabāts!");
             fetchPlayerData();
         }
 
         function renderBuildings() {
-            let html = "";
-            for (let bKey in serverData.buildings) {
-                let lvl = serverData.buildings[bKey];
-                html += `<div class="panel"><div>${bKey.toUpperCase()} (Lvl ${lvl})</div><button class="btn" onclick="upgrade('${bKey}')">UZLABOT</button></div>`;
+            const bList = document.getElementById('buildings-list');
+            bList.innerHTML = "";
+            for (let key in serverData.buildings) {
+                bList.innerHTML += `<div class="panel" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>${key.toUpperCase()} Lvl ${serverData.buildings[key]}</div>
+                    <button class="btn" style="width:auto;" onclick="upgrade('${key}')">UZLABOT</button>
+                </div>`;
             }
-            document.getElementById('buildings-list').innerHTML = html;
         }
 
-        async function upgrade(bKey) {
+        async function upgrade(key) {
             await fetch(`${API_URL}/upgrade`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ tgId, bKey })
+                body: JSON.stringify({ tgId, bKey: key })
             });
             fetchPlayerData();
         }
