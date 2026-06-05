@@ -41,7 +41,6 @@
         .mission-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
         .mission-row { background: rgba(255,255,255,0.02); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* JAUNAIS ĒKU STILS */
         .building-item { background: var(--bg-panel); border: 1px solid var(--border-dark); margin: 0 15px 10px 15px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
         .building-locked { filter: grayscale(1) opacity(0.6); border-style: dashed; }
         .btn-upgrade { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px 12px; border-radius: 6px; font-family: inherit; font-weight: 700; cursor: pointer; font-size: 12px; text-align: center; transition: 0.2s; }
@@ -59,7 +58,6 @@
         input[type=range] { width: 100%; margin-top: 5px; accent-color: var(--cyan); }
         .btn-full { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: inherit; margin-top: 10px; }
 
-        /* DICE CSS */
         .dice-history-bar { display: flex; gap: 5px; overflow-x: hidden; padding: 10px; background: #070d18; border-radius: 6px; border: 1px solid var(--border-dark); margin-bottom: 15px; }
         .dice-history-item { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #fff; min-width: 45px; text-align: center; }
         .dice-history-item.win { color: var(--green); background: rgba(0, 231, 0, 0.1); border: 1px solid rgba(0, 231, 0, 0.2); }
@@ -71,7 +69,7 @@
         .dice-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .dice-input-box { background: #070d18; border: 1px solid var(--border-dark); padding: 8px; border-radius: 6px; }
         .dice-input-box label { font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px; text-transform: uppercase; }
-        .dice-input-box input { width: 100%; background: transparent; border: none; color: #fff; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; }
+        .dice-input-box input, .dice-input-box select { width: 100%; background: transparent; border: none; color: #fff; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; }
         .dice-input-box input:read-only { color: var(--cyan); }
         .btn-dice-roll { background: var(--green); color: #000; border: none; padding: 15px; border-radius: 8px; width: 100%; font-size: 18px; font-weight: 700; font-family: inherit; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(0, 231, 0, 0.2); }
         .btn-dice-roll:active { transform: scale(0.97); }
@@ -117,18 +115,18 @@
         </div>
 
         <div class="missions-panel">
-            <h4 style="margin: 0 0 10px 0; color: var(--cyan); font-size: 13px; letter-spacing: 1px;"><i class="fas fa-user-shield"></i> HAKERA STATISTIKA</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid #1a2639; padding: 10px; border-radius: 8px; text-align: center;">
-                    <div style="font-size: 11px; color: var(--grey); font-weight: 700;">⚔️ UZBRUKUMA SPĒKS</div>
-                    <div style="font-size: 22px; font-weight: 700; color: var(--red); margin-top: 2px;" id="home-stat-attack">10</div>
-                </div>
-                <div style="background: rgba(255,255,255,0.01); border: 1px solid #1a2639; padding: 10px; border-radius: 8px; text-align: center;">
-                    <div style="font-size: 11px; color: var(--grey); font-weight: 700;">🛡️ AIZSARDZĪBA</div>
-                    <div style="font-size: 22px; font-weight: 700; color: var(--green); margin-top: 2px;" id="home-stat-defense">10</div>
-                </div>
+            <h4 style="margin: 0 0 10px 0; color: var(--cyan); font-size: 13px; letter-spacing: 1px;"><i class="fas fa-box"></i> NOLIKTAVAS STATUSS</h4>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+                <span style="color: var(--grey);">Max Kapacitāte:</span>
+                <strong id="home-storage-cap" style="color: #fff;">0</strong>
             </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: var(--grey);">Aizsargāti (PvP):</span>
+                <strong id="home-storage-prot" style="color: var(--green);">0</strong>
+            </div>
+        </div>
 
+        <div class="missions-panel">
             <h4 style="margin: 0 0 8px 0; color: var(--cyan); font-size: 12px; letter-spacing: 1px;"><i class="fas fa-sync-alt fa-spin" style="font-size: 10px; color: var(--cyan);"></i> PROCESU MONITORINGS</h4>
             <div style="background: rgba(0,0,0,0.15); border: 1px solid #1a2639; padding: 12px; border-radius: 8px; font-size: 13px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 6px;">
@@ -144,7 +142,10 @@
     </div>
 
     <!-- TAB 2: MARKET -->
-    <div id="tab-market" class="tab-content"><div class="building-item"><div style="text-align:center; width:100%;"><h3>🛒 MELNĀ BIRŽA</h3><p>Tirgus modulis būs pieejams drīzumā.</p></div></div></div>
+    <div id="tab-market" class="tab-content">
+        <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-shopping-cart"></i> MELNĀ BIRŽA</h3>
+        <div id="market-ui-container">Ielādē tirgu...</div>
+    </div>
     
     <!-- TAB 3: CASINO (DICE) -->
     <div id="tab-casino" class="tab-content">
@@ -188,7 +189,7 @@
         </div>
     </div>
 
-    <!-- TAB 4: BASE (PILNAIS KATALOGS) -->
+    <!-- TAB 4: BASE -->
     <div id="tab-base" class="tab-content">
         <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-server"></i> INFRASTRUKTŪRA</h3>
         <div id="buildings-list">Ielādē bāzes sistēmas...</div>
@@ -196,22 +197,27 @@
 
     <!-- TAB 5: MISSIONS & PVP -->
     <div id="tab-missions" class="tab-content">
+        
+        <!-- VIENĪBU TRENĒŠANA (JAUNS) -->
+        <div class="missions-panel" style="border-color: var(--cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.05);">
+            <h3 style="margin: 0 0 10px 0; color: var(--cyan);"><i class="fas fa-crosshairs"></i> VIENĪBU TRENĒŠANA</h3>
+            <div id="army-ui-container">Ielādē datus...</div>
+        </div>
+
         <div class="missions-panel">
             <h3 style="margin: 0; color: var(--cyan);"><i class="fas fa-terminal"></i> AKTĪVĀS OPERĀCIJAS (PvE)</h3>
             <div class="mission-grid" id="missions-list">Ielādē...</div>
         </div>
 
         <div class="missions-panel" style="border-color: var(--red); box-shadow: 0 0 10px rgba(255, 42, 42, 0.1);">
-            <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-crosshairs"></i> KIBER-KARI (PvP)</h3>
-            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz citu spēlētāju sistēmas. Katrs uzbrukums patērē 1 Kiber-Proksiju.</p>
-            
+            <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-user-secret"></i> KIBER-KARI (PvP)</h3>
+            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzlauz citu spēlētāju sistēmas. Katrs uzbrukums patērē 1 Kiber-Proksiju no tavas armijas.</p>
+
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid #1a2639; margin-bottom: 15px;">
-                <div>
-                    <div style="font-weight:700; color:#fff;">IEGĀDĀTIES PROKSIJU</div>
-                    <span style="font-size:11px; color:var(--grey);">Izmaksas: 🛠️ 300 | 💾 100</span>
-                    <div style="font-size:10px; color:var(--cyan); margin-top:2px;">Tev ir: <span id="pvp-proxy-count" style="font-weight:bold;">0</span></div>
+                <div style="font-size: 11px; color: var(--grey);">
+                    Tava Armija (Proksiji):
                 </div>
-                <button class="btn-upgrade" onclick="buyProxy()" style="width: 80px; border-color: var(--cyan); color: var(--cyan);">PIRKT (1)</button>
+                <strong id="pvp-proxy-count" style="color: var(--cyan); font-size: 18px;">0</strong>
             </div>
 
             <div id="pvp-result-msg" style="text-align: center; min-height: 25px; margin-bottom: 10px; font-weight: 700; font-size: 14px;"></div>
@@ -247,16 +253,16 @@
             element.classList.add('active');
         }
 
-        // --- PVP UN KAZINO FUNKCIJAS (BEZ IZMAIŅĀM) ---
+        // --- PVP UN KAZINO FUNKCIJAS ---
         async function buyProxy() {
-            const resDiv = document.getElementById('pvp-result-msg');
-            resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Pērk Kiber-Proksiju...</span>`;
+            const resDiv = document.getElementById('army-result-msg');
+            if(resDiv) resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Trenē Kiber-Proksiju...</span>`;
             try {
                 let res = await fetch(`${API_URL}/pvp/buy-proxy`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId }) });
                 let data = await res.json();
-                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
-                else { serverData = data.player; updateUI(serverData); resDiv.innerHTML = `<span style="color:var(--green)"><i class="fas fa-check"></i> ${data.message}</span>`; }
-            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
+                if (data.error && resDiv) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
+                else if (resDiv) { serverData = data.player; updateUI(serverData); resDiv.innerHTML = `<span style="color:var(--green)"><i class="fas fa-check"></i> ${data.message}</span>`; }
+            } catch (err) { if(resDiv) resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
         }
 
         async function loadTargets() {
@@ -279,6 +285,35 @@
                 if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
                 else { serverData = data.player; updateUI(serverData); let col = data.isWin ? "var(--green)" : "var(--red)"; resDiv.innerHTML = `<span class="roll-result-anim" style="color:${col}">${data.message}</span>`; loadTargets(); }
             } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda.</span>`; }
+        }
+
+        // --- MARKET FUNKCIJA ---
+        async function executeTrade() {
+            const action = document.getElementById('market-action').value;
+            const resource = document.getElementById('market-res').value;
+            const amount = document.getElementById('market-amount').value;
+            const msg = document.getElementById('market-result-msg');
+            msg.innerHTML = `<span style="color:var(--grey)"><i class="fas fa-spinner fa-spin"></i> Sazinās ar biržu...</span>`;
+            
+            try {
+                let res = await fetch(`${API_URL}/market/trade`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, 
+                    body: JSON.stringify({ tgId: tgId, action: action, resource: resource, amount: amount }) 
+                });
+                let data = await res.json();
+                if (data.error) msg.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
+                else { serverData = data.player; updateUI(serverData); msg.innerHTML = `<span style="color:var(--green)">${data.message}</span>`; }
+            } catch (err) { msg.innerHTML = `<span style="color:var(--red)">Sistēmas kļūda</span>`; }
+        }
+
+        function updateMarketPrice() {
+            let a = document.getElementById('market-action').value;
+            let r = document.getElementById('market-res').value;
+            let qty = parseInt(document.getElementById('market-amount').value) || 0;
+            let p = r === 'metal' ? 1 : 2;
+            let cost = a === 'buy' ? qty * (p * 2) : qty * p;
+            document.getElementById('market-price-disp').innerText = cost;
         }
 
         function toggleDiceCondition() {
@@ -366,6 +401,12 @@
             let totalPop = Math.floor(p.population.total);
             document.getElementById('val-pop').innerText = `${totalPop}/${maxPopData}`;
 
+            // Storage Data
+            let cap = p.buildingCatalog.storage_grid?.effects?.capacityPerResource || 1500;
+            let prot = p.buildingCatalog.storage_grid?.effects?.protectedPerResource || 100;
+            document.getElementById('home-storage-cap').innerText = cap;
+            document.getElementById('home-storage-prot').innerText = prot;
+
             let slM = document.getElementById('sl-mWork');
             let slC = document.getElementById('sl-cWork');
             let slS = document.getElementById('sl-sWork');
@@ -381,9 +422,59 @@
                 updateSliders();
             }
 
-            if(p.stats) {
-                document.getElementById('home-stat-attack').innerText = p.stats.attack;
-                document.getElementById('home-stat-defense').innerText = p.stats.defense;
+            // Market UI Update
+            let marketLvl = p.buildingCatalog.exchange_gateway?.currentLvl || 0;
+            const mUi = document.getElementById('market-ui-container');
+            if (marketLvl === 0) {
+                mUi.innerHTML = `<div class="building-item building-locked"><div style="text-align:center; width:100%;"><h3>🔒 SLĒGTS</h3><p style="font-size:12px; color:var(--grey)">Uzbūvē Exchange Gateway Lvl 1, lai piekļūtu Melnajai Biržai un mainītu resursus.</p></div></div>`;
+            } else if (!mUi.innerHTML.includes('market-action')) {
+                mUi.innerHTML = `
+                <div class="building-item" style="flex-direction:column; gap:10px;">
+                    <div style="font-size:11px; color:var(--grey); width:100%; text-align:center;">
+                        Metāls: Pērc par 2, Pārdod par 1.<br>Čipi: Pērc par 4, Pārdod par 2.
+                    </div>
+                    <div class="dice-input-group" style="width:100%; margin:0;">
+                        <div class="dice-input-box">
+                            <label>Darbība</label>
+                            <select id="market-action" onchange="updateMarketPrice()">
+                                <option value="buy">PIRKT</option><option value="sell">PĀRDOT</option>
+                            </select>
+                        </div>
+                        <div class="dice-input-box">
+                            <label>Resurss</label>
+                            <select id="market-res" onchange="updateMarketPrice()">
+                                <option value="metal">METĀLU</option><option value="chips">ČIPUS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="dice-input-box" style="width:100%;">
+                        <label>Daudzums</label>
+                        <input type="number" id="market-amount" value="100" min="1" oninput="updateMarketPrice()">
+                    </div>
+                    <div style="width:100%; text-align:center; margin:10px 0;">
+                        Cena: <strong style="color:var(--yellow); font-size:18px;"><span id="market-price-disp">200</span> Kredīti</strong>
+                    </div>
+                    <div id="market-result-msg" style="text-align:center; font-size:12px; min-height:15px; margin-bottom:10px;"></div>
+                    <button class="btn-full" onclick="executeTrade()" style="margin:0;">APSTIPRINĀT DARĪJUMU</button>
+                </div>`;
+            }
+
+            // Army UI Update
+            let combatLvl = p.buildingCatalog.combat_node?.currentLvl || 0;
+            const aUi = document.getElementById('army-ui-container');
+            if (combatLvl === 0) {
+                aUi.innerHTML = `<div style="text-align:center; color:var(--grey); font-size:12px; padding:10px;">🔒 Uzbūvē Combat Node Lvl 1, lai varētu trenēt Kiber-Proksijus uzbrukumiem!</div>`;
+            } else if (!aUi.innerHTML.includes('buyProxy')) {
+                aUi.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid #1a2639; margin-bottom: 15px;">
+                    <div>
+                        <div style="font-weight:700; color:#fff;">KIBER-PROKSIJS</div>
+                        <span style="font-size:11px; color:var(--grey);">Izmaksas: 🛠️ 300 | 💾 100</span>
+                    </div>
+                    <button class="btn-upgrade" onclick="buyProxy()" style="width: 80px; border-color: var(--cyan); color: var(--cyan);">TRENĒT</button>
+                </div>
+                <div id="army-result-msg" style="text-align: center; min-height: 15px; font-weight: 700; font-size: 13px;"></div>
+                `;
             }
 
             renderBuildings();
@@ -444,7 +535,6 @@
             } else { missionEl.innerHTML = `<span style="color:var(--grey)">Nav aktīvu operāciju</span>`; }
         }
 
-        // JAUNUMS: Visi efekti tulkoti latviski priekš saskarnes
         const effectNames = {
             maxPopulation: "Max Iedzīvotāji", actionPoints: "Rīcības Punkti", maxColonies: "Max Kolonijas",
             corruptionReductionLevel: "Korupcijas Samazinājums", maxScientists: "Max Zinātnieki",
@@ -462,7 +552,6 @@
             raidPointsPerHour: "Reidu Punkti/h", maxSpies: "Max Snifferi", diplomacyPoints: "Diplomātijas Punkti"
         };
 
-        // JAUNUMS: Uzģenerē pilno ēku sarakstu automātiski
         function renderBuildings() {
             if (!serverData || !serverData.buildingCatalog) return;
             const constr = serverData.construction;
@@ -472,8 +561,6 @@
                 let btnHtml = "";
                 let isThisUpgrading = constr && constr.bKey === key;
                 let isOtherUpgrading = constr && constr.bKey !== key;
-                
-                // Ja spēlētājam nepietiek resursu, lapa to piefiksē automātiski
                 let canAfford = serverData.resources.metal >= bData.costMetal && serverData.resources.silicon >= bData.costChips;
 
                 if (isThisUpgrading) {
@@ -483,18 +570,14 @@
                 } else if (isOtherUpgrading) {
                     btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%;">GAIDI</button>`;
                 } else if (!bData.allowed) {
-                     if(bData.error.includes("Sasniegts maksimālais")) {
-                        btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--green); color:var(--green)">MAX LVL</button>`;
-                     } else {
-                        btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--red); color:var(--red)"><i class="fas fa-lock"></i> LOCK</button>`;
-                     }
+                     if(bData.error.includes("Sasniegts maksimālais")) btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--green); color:var(--green)">MAX LVL</button>`;
+                     else btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--red); color:var(--red)"><i class="fas fa-lock"></i> LOCK</button>`;
                 } else if (!canAfford) {
                     btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--grey); color:var(--grey)">TRŪKST RES</button>`;
                 } else {
                     btnHtml = `<button class="btn-upgrade" onclick="upgradeBuilding('${key}')" style="width:100%;">UZLABOT</button>`;
                 }
 
-                // Efektu bloks (Rāda esošo un nākamo līmeni)
                 let effectHtml = "";
                 for (let k in bData.effects) {
                     let name = effectNames[k] || k;
@@ -510,8 +593,6 @@
                 }
 
                 let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px;"><i class="fas fa-exclamation-circle"></i> ${bData.error}</div>` : "";
-                
-                // Ja ēka vēl nav būvēta un neatbilst kritērijiem -> PADARĪT PELĒKU
                 let isLocked = !bData.allowed && bData.currentLvl === 0;
 
                 bHtml += `
@@ -522,21 +603,16 @@
                             <span style="color:var(--cyan); font-size:12px; margin-left:5px;">Lvl ${bData.currentLvl}</span>
                         </div>
                         <div style="font-size:10px; color:var(--grey); margin-top:2px;">${bData.description}</div>
-                        
                         ${effectHtml ? `<div style="font-size:11px; margin-top:6px; color:#fff; background:rgba(0,0,0,0.3); padding:6px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">${effectHtml}</div>` : ''}
-                        
                         ${bData.currentLvl < 50 && (!bData.error.includes("maksimālais")) ? `
                         <div style="font-size:11px; margin-top:6px; color:var(--grey); display:flex; gap:10px; align-items:center;">
                             <span><i class="fas fa-hammer"></i> ${bData.costMetal}</span>
                             ${bData.costChips > 0 ? `<span><i class="fas fa-microchip" style="color:var(--blue)"></i> ${bData.costChips}</span>` : ''}
                             <span><i class="far fa-clock" style="color:var(--yellow)"></i> ${formatTimeLong(bData.timeMs)}</span>
                         </div>` : ''}
-                        
                         ${errorText}
                     </div>
-                    <div style="width: 80px; flex-shrink: 0; margin-top: 2px;">
-                        ${btnHtml}
-                    </div>
+                    <div style="width: 80px; flex-shrink: 0; margin-top: 2px;">${btnHtml}</div>
                 </div>`;
             }
             document.getElementById('buildings-list').innerHTML = bHtml;
@@ -570,7 +646,7 @@
                 let res = await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId, bKey: bKey }) }); 
                 let data = await res.json(); 
                 if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } 
-            } catch (err) { alert("Savienojuma kļūda! Pārbaudi tuneli."); }
+            } catch (err) { alert("Savienojuma kļūda!"); }
         }
 
         async function startMission(diff) { 
@@ -578,7 +654,7 @@
                 let res = await fetch(`${API_URL}/mission/start`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId, difficulty: diff }) }); 
                 let data = await res.json(); 
                 if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } 
-            } catch (err) { alert("Savienojuma kļūda! Pārbaudi tuneli."); }
+            } catch (err) { alert("Savienojuma kļūda!"); }
         }
 
         async function claimMission() { 
@@ -586,7 +662,7 @@
                 let res = await fetch(`${API_URL}/mission/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' }, body: JSON.stringify({ tgId: tgId }) }); 
                 let data = await res.json(); 
                 if (data.error) alert(data.error); else { serverData = data; updateUI(serverData); } 
-            } catch (err) { alert("Savienojuma kļūda! Pārbaudi tuneli."); }
+            } catch (err) { alert("Savienojuma kļūda!"); }
         }
 
         updateDiceMath();
