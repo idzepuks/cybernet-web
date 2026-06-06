@@ -49,20 +49,18 @@
         input[type=range] { width: 100%; margin-top: 5px; accent-color: var(--cyan); }
         .btn-full { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 8px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: inherit; margin-top: 10px; }
 
-        /* Kazino CSS */
+        .market-tab-btn { flex: 1; background: transparent; color: var(--grey); border: 1px solid var(--border-dark); padding: 10px; font-family: inherit; font-weight: bold; cursor: pointer; font-size: 10px;}
+        .market-tab-btn.active { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-color: var(--cyan); }
+
+        /* Kazino */
         .dice-history-bar { display: flex; gap: 5px; overflow-x: hidden; padding: 10px; background: #070d18; border-radius: 6px; border: 1px solid var(--border-dark); margin-bottom: 15px; }
         .dice-history-item { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #fff; min-width: 45px; text-align: center; }
         .dice-history-item.win { color: var(--green); border: 1px solid rgba(0, 231, 0, 0.2); }
         .dice-history-item.loss { color: var(--red); border: 1px solid rgba(255, 42, 42, 0.2); }
-        .dice-slider-container { position: relative; margin: 30px 0; padding: 0 10px; }
-        .dice-slider { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--green) 50%, var(--red) 50%); outline: none; }
-        .dice-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 32px; border-radius: 4px; background: #fff; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .dice-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .dice-slider { -webkit-appearance: none; width: 100%; height: 8px; border-radius: 4px; outline: none; }
+        .dice-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 32px; border-radius: 4px; background: #fff; cursor: pointer; }
         .dice-input-box { background: #070d18; border: 1px solid var(--border-dark); padding: 8px; border-radius: 6px; }
-        .dice-input-box label { font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px; text-transform: uppercase; }
         .dice-input-box input, .dice-input-box select { width: 100%; background: transparent; border: none; color: #fff; font-size: 14px; font-family: inherit; font-weight: 700; outline: none; }
-        .market-tab-btn { flex: 1; background: transparent; color: var(--grey); border: 1px solid var(--border-dark); padding: 10px; font-family: inherit; font-weight: bold; cursor: pointer; }
-        .market-tab-btn.active { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border-color: var(--cyan); }
     </style>
 </head>
 <body>
@@ -77,9 +75,7 @@
         <div class="res-card c-proxy"><i class="fas fa-users"></i><span class="res-name">PILSOŅI</span><span class="res-val" id="val-pop">0/0</span></div>
     </div>
 
-    <!-- TAB 1: HOME -->
     <div id="tab-home" class="tab-content active">
-        <!-- ANALĪTIKA -->
         <div class="missions-panel" style="margin-top: 0; border-color: #ff9900;">
             <h4 style="margin: 0 0 10px 0; color: #ff9900; font-size: 13px;"><i class="fas fa-chart-line"></i> RAŽOŠANAS ANALĪTIKA (Stundā)</h4>
             <div style="font-size:12px; color:var(--grey); display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
@@ -115,7 +111,6 @@
         </div>
     </div>
 
-    <!-- TAB 2: MARKET -->
     <div id="tab-market" class="tab-content">
         <h3 style="color: var(--cyan); margin-left: 15px;"><i class="fas fa-shopping-cart"></i> MELNĀ BIRŽA</h3>
         <div id="market-ui-container">
@@ -129,7 +124,7 @@
             </div>
             <div id="market-sell-section" class="missions-panel" style="display:none; margin-top:0;">
                 <p style="font-size:12px; color:var(--grey)">Izvieto savus resursus tirgū. Nosaki pats savu cenu par gabalu.</p>
-                <div class="dice-input-group">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                     <div class="dice-input-box"><label>Resurss</label><select id="sell-res"><option value="metal">Metāls</option><option value="silicon">Čipi</option></select></div>
                     <div class="dice-input-box"><label>Daudzums</label><input type="number" id="sell-amount" value="100"></div>
                 </div>
@@ -140,58 +135,30 @@
         </div>
     </div>
 
-    <!-- TAB 3: CASINO -->
     <div id="tab-casino" class="tab-content">
         <div class="missions-panel" style="padding-top: 10px; border-color: var(--green);">
             <h3 style="margin: 0 0 10px 0; color: var(--green); text-align:center;"><i class="fas fa-dice"></i> KIBER-KAZINO</h3>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <span style="font-size: 10px; color: var(--grey); font-weight: 700;">🌐 LIVE ROLLS</span>
-                <i class="fas fa-circle" style="color: var(--green); font-size: 6px; animation: pulse 2s infinite;"></i>
-            </div>
             <div class="dice-history-bar" id="dice-history-ui"></div>
-
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <div style="flex: 1;">
-                    <label style="font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px;">RESURSS</label>
-                    <select id="dice-resource" style="width: 100%; background: #070d18; color: #fff; border: 1px solid var(--border-dark); padding: 8px; border-radius: 6px; font-family: inherit; outline: none; font-weight: 700;">
-                        <option value="metal">🛠️ METĀLS</option>
-                        <option value="chips">💾 ČIPI</option>
-                    </select>
-                </div>
-                <div style="flex: 1;">
-                    <label style="font-size: 9px; color: var(--grey); font-weight: 700; display: block; margin-bottom: 4px;">NOSACĪJUMS</label>
-                    <button class="dice-toggle-btn" id="dice-toggle" onclick="toggleDiceCondition()">ROLL UNDER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i></button>
-                </div>
+                <div style="flex: 1;"><label style="font-size: 9px; color: var(--grey); font-weight: 700;">RESURSS</label><select id="dice-resource" style="width: 100%; background: #070d18; color: #fff; border: 1px solid var(--border-dark); padding: 8px; border-radius: 6px;"><option value="metal">🛠️ METĀLS</option><option value="chips">💾 ČIPI</option></select></div>
+                <div style="flex: 1;"><label style="font-size: 9px; color: var(--grey); font-weight: 700;">NOSACĪJUMS</label><button class="btn-full" id="dice-toggle" onclick="toggleDiceCondition()" style="margin:0;">ROLL UNDER <i class="fas fa-exchange-alt"></i></button></div>
             </div>
-
-            <div class="dice-slider-container">
+            <div style="position: relative; margin: 30px 0; padding: 0 10px;">
                 <input type="range" min="2" max="98" step="0.01" value="49.50" class="dice-slider" id="dice-slider" oninput="updateDiceMath()">
-                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--grey); font-weight: 700; margin-top: 8px; padding: 0 5px;">
-                    <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
-                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--grey); font-weight: 700; margin-top: 8px;"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
             </div>
-
-            <div class="dice-input-group">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
                 <div class="dice-input-box"><label>Likme</label><input type="number" id="dice-bet" value="10" min="1" oninput="updateDiceMath()"></div>
-                <div class="dice-input-box"><label>Laimests</label><input type="text" id="dice-profit" value="19.80" readonly></div>
-                <div class="dice-input-box"><label>Reizinātājs</label><input type="text" id="dice-multiplier" value="1.98x" readonly></div>
-                <div class="dice-input-box"><label>Iespējamība (%)</label><input type="text" id="dice-chance" value="49.50" readonly></div>
+                <div class="dice-input-box"><label>Laimests</label><input type="text" id="dice-profit" readonly></div>
+                <div class="dice-input-box"><label>Reizinātājs</label><input type="text" id="dice-multiplier" readonly></div>
+                <div class="dice-input-box"><label>Iespējamība (%)</label><input type="text" id="dice-chance" readonly></div>
             </div>
-
             <div id="dice-result-msg" style="text-align: center; min-height: 25px; margin-bottom: 10px; font-weight: 700; font-size: 15px;"></div>
             <button class="btn-full" onclick="playDice()" style="background:var(--green); color:#000; font-size: 18px; padding: 15px;">SPĒLĒT (BET)</button>
         </div>
     </div>
 
-    <!-- TAB 4: BASE & RESEARCH -->
     <div id="tab-base" class="tab-content">
-        <!-- Pētniecība -->
-        <div class="missions-panel" style="border-color: #c77dff; box-shadow: 0 0 10px rgba(199, 125, 255, 0.1);">
-            <h3 style="margin: 0 0 10px 0; color: #c77dff;"><i class="fas fa-microscope"></i> PĒTNIECĪBA</h3>
-            <div id="research-list">Ielādē pētījumus...</div>
-        </div>
-
-        <!-- Armija -->
         <div class="missions-panel" style="border-color: var(--red); box-shadow: 0 0 10px rgba(255, 42, 42, 0.1);">
             <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-crosshairs"></i> ARMIJAS TRENĒŠANA</h3>
             <div id="army-ui">
@@ -213,11 +180,21 @@
         <div id="buildings-list">Ielādē bāzes sistēmas...</div>
     </div>
 
-    <!-- TAB 5: MISSIONS & PVP -->
+    <div id="tab-research" class="tab-content">
+        <h3 style="color: #c77dff; margin-left: 15px;"><i class="fas fa-microscope"></i> PĒTNIECĪBAS KOKS</h3>
+        <div style="display:flex; margin: 0 15px 15px 15px; gap:5px;">
+            <button class="market-tab-btn active" id="btn-res-nav" onclick="setResearchTab('NAV')">TĪKLOS</button>
+            <button class="market-tab-btn" id="btn-res-eco" onclick="setResearchTab('ECO')">EKO</button>
+            <button class="market-tab-btn" id="btn-res-sci" onclick="setResearchTab('SCI')">ZINĀTNE</button>
+            <button class="market-tab-btn" id="btn-res-mil" onclick="setResearchTab('MIL')">KAUJA</button>
+        </div>
+        <div id="research-tree-ui" style="padding: 0 15px;">Ielādē...</div>
+    </div>
+
     <div id="tab-missions" class="tab-content">
         <div class="missions-panel" style="border-color: var(--red);">
             <h3 style="margin: 0 0 10px 0; color: var(--red);"><i class="fas fa-user-secret"></i> KIBER-KARI (PvP)</h3>
-            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzbrukumā tu nosūtīsi VISU savu armiju. Uzvaras gadījumā zaudēsi daļu, zaudējuma gadījumā - gandrīz visu!</p>
+            <p style="font-size: 13px; color: var(--grey); margin-bottom: 15px;">Uzbrukumā tu nosūtīsi VISU savu armiju. Tu vari zaudēt savas vienības!</p>
             <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid #1a2639; margin-bottom: 15px;">
                 <div style="font-size: 11px; color: var(--grey);">Tava Aktīvā Armija:</div>
                 <strong id="pvp-proxy-count" style="color: var(--cyan); font-size: 18px;">0 Proksiji</strong>
@@ -228,12 +205,12 @@
         </div>
     </div>
 
-    <!-- 5 IZVĒLNES POGAS -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('tab-home', this)"><i class="fas fa-home"></i><br>HOME</div>
         <div class="nav-item" onclick="switchTab('tab-market', this)"><i class="fas fa-shopping-cart"></i><br>MARKET</div>
         <div class="nav-item" onclick="switchTab('tab-casino', this)"><i class="fas fa-dice"></i><br>CASINO</div>
         <div class="nav-item" onclick="switchTab('tab-base', this)"><i class="fas fa-server"></i><br>BASE</div>
+        <div class="nav-item" onclick="switchTab('tab-research', this)"><i class="fas fa-microscope" style="color:#c77dff;"></i><br>RESEARCH</div>
         <div class="nav-item" onclick="switchTab('tab-missions', this)"><i class="fas fa-crosshairs"></i><br>COMBAT</div>
     </div>
 
@@ -244,6 +221,7 @@
         const tgId = tg?.initDataUnsafe?.user?.id || 123456789;
         let serverData = null;
         let diceCondition = 'under';
+        let currentResearchCategory = 'NAV';
 
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -252,192 +230,132 @@
             element.classList.add('active');
             if(tabId === 'tab-market') loadMarket();
             if(tabId === 'tab-casino') pollDiceHistory();
+            if(tabId === 'tab-research') renderResearchUI();
         }
 
-        // ================= GALVENĀ LOGIKA =================
         async function fetchPlayerData() {
-            try {
-                let res = await fetch(`${API_URL}/player/${tgId}`);
-                serverData = await res.json();
-                updateUI(serverData);
-            } catch (err) {}
+            try { let res = await fetch(`${API_URL}/player/${tgId}`); serverData = await res.json(); updateUI(serverData); } catch (err) {}
         }
 
         function formatTime(ms) {
-            if (ms <= 0) return "0s";
-            let s = Math.floor(ms / 1000);
-            let h = Math.floor(s / 3600);
-            let m = Math.floor((s % 3600) / 60);
-            s = s % 60;
-            if (h > 0) return `${h}h ${m}m`;
-            if (m > 0) return `${m}m ${s}s`;
-            return `${s}s`;
+            if (ms <= 0) return "0s"; let s = Math.floor(ms / 1000); let h = Math.floor(s / 3600); let m = Math.floor((s % 3600) / 60); s = s % 60;
+            if (h > 0) return `${h}h ${m}m`; if (m > 0) return `${m}m ${s}s`; return `${s}s`;
         }
 
         function updateUI(p) {
             if(!p) return;
-            document.getElementById('val-metal').innerText = p.resources.metal;
-            document.getElementById('val-chips').innerText = p.resources.silicon;
-            document.getElementById('val-gold').innerText = p.resources.gold;
-            document.getElementById('val-res').innerText = p.resources.research;
+            document.getElementById('val-metal').innerText = p.resources.metal; document.getElementById('val-chips').innerText = p.resources.silicon;
+            document.getElementById('val-gold').innerText = p.resources.gold; document.getElementById('val-res').innerText = p.resources.research;
             document.getElementById('val-pop').innerText = `${Math.floor(p.population.total)}/${p.maxPopulation || 60}`;
             
-            document.getElementById('home-stat-attack').innerText = p.stats.attack;
-            document.getElementById('home-stat-defense').innerText = p.stats.defense;
+            document.getElementById('home-stat-attack').innerText = p.stats.attack; document.getElementById('home-stat-defense').innerText = p.stats.defense;
             document.getElementById('pvp-proxy-count').innerText = `${p.resources.proxies} Proksiji`;
 
-            // ANALĪTIKA
             if(p.analytics) {
-                document.getElementById('an-metal').innerText = `+${p.analytics.metalPerHour}/h`;
-                document.getElementById('an-chips').innerText = `+${p.analytics.chipsPerHour}/h`;
-                document.getElementById('an-res').innerText = `+${p.analytics.resPerHour}/h`;
-                document.getElementById('an-gold-exp').innerText = `-${p.analytics.goldExpPerHour}/h`;
-                let netGold = p.analytics.goldIncPerHour - p.analytics.goldExpPerHour;
-                let anNet = document.getElementById('an-gold-net');
-                anNet.innerText = `${netGold > 0 ? '+' : ''}${netGold}/h`;
-                anNet.style.color = netGold >= 0 ? "var(--green)" : "var(--red)";
+                document.getElementById('an-metal').innerText = `+${p.analytics.metalPerHour}/h`; document.getElementById('an-chips').innerText = `+${p.analytics.chipsPerHour}/h`;
+                document.getElementById('an-res').innerText = `+${p.analytics.resPerHour}/h`; document.getElementById('an-gold-exp').innerText = `-${p.analytics.goldExpPerHour}/h`;
+                let netGold = p.analytics.goldIncPerHour - p.analytics.goldExpPerHour; let anNet = document.getElementById('an-gold-net');
+                anNet.innerText = `${netGold > 0 ? '+' : ''}${netGold}/h`; anNet.style.color = netGold >= 0 ? "var(--green)" : "var(--red)";
             }
 
-            // Slīdņi
             let slM = document.getElementById('sl-mWork'), slC = document.getElementById('sl-cWork'), slS = document.getElementById('sl-sWork');
             slM.max = Math.min(Math.floor(p.population.total), p.buildingCatalog.mine?.effects?.maxWorkers || 0);
             slC.max = Math.min(Math.floor(p.population.total), p.buildingCatalog.server?.effects?.maxWorkers || 0);
             slS.max = Math.min(Math.floor(p.population.total), p.buildingCatalog.neural_hub?.effects?.maxScientists || 0);
             if (!slM.dataset.touched) { slM.value = p.population.metalWorkers; slC.value = p.population.chipsWorkers; slS.value = p.population.scientists; updateSliders(); }
 
-            // Armijas UI
             if (p.buildingCatalog.combat_node?.currentLvl > 0) {
                 if(p.armyQueue) {
-                    document.getElementById('army-ui').style.display = 'none';
-                    document.getElementById('army-process').style.display = 'block';
-                    let timeLeft = p.armyQueue.endTime - Date.now();
-                    document.getElementById('army-timer-disp').innerText = formatTime(timeLeft);
+                    document.getElementById('army-ui').style.display = 'none'; document.getElementById('army-process').style.display = 'block';
+                    let timeLeft = p.armyQueue.endTime - Date.now(); document.getElementById('army-timer-disp').innerText = formatTime(timeLeft);
                     if(timeLeft <= 0) fetchPlayerData();
                 } else {
-                    document.getElementById('army-process').style.display = 'none';
-                    document.getElementById('army-ui').style.display = 'block';
-                    let costRed = p.researches?.mil4 ? 0.9 : 1.0;
-                    let maxM = Math.floor(p.resources.metal / (300 * costRed));
-                    let maxC = Math.floor(p.resources.silicon / (100 * costRed));
-                    let maxAfford = Math.min(maxM, maxC);
-                    let aSl = document.getElementById('army-slider');
-                    aSl.max = maxAfford;
-                    if(parseInt(aSl.value) > maxAfford) aSl.value = maxAfford;
-                    updateArmySlider();
+                    document.getElementById('army-process').style.display = 'none'; document.getElementById('army-ui').style.display = 'block';
+                    let costRed = p.bonuses?.unitCost || 1.0; let maxM = Math.floor(p.resources.metal / (300 * costRed)); let maxC = Math.floor(p.resources.silicon / (100 * costRed));
+                    let aSl = document.getElementById('army-slider'); aSl.max = Math.min(maxM, maxC); if(parseInt(aSl.value) > aSl.max) aSl.value = aSl.max; updateArmySlider();
                 }
-            } else {
-                document.getElementById('army-ui').innerHTML = `<div style="text-align:center; color:var(--grey); font-size:12px;">🔒 Uzbūvē Combat Node Lvl 1, lai trenētu armiju!</div>`;
-            }
+            } else { document.getElementById('army-ui').innerHTML = `<div style="text-align:center; color:var(--grey); font-size:12px;">🔒 Uzbūvē Combat Node Lvl 1, lai trenētu armiju!</div>`; }
 
             renderBuildings(p);
-            renderResearch(p);
+            if(document.getElementById('tab-research').classList.contains('active')) renderResearchUI();
         }
 
-        // ================= KAZINO (Atgriezts) =================
-        function toggleDiceCondition() {
-            diceCondition = diceCondition === 'under' ? 'over' : 'under';
-            document.getElementById('dice-toggle').innerHTML = diceCondition === 'under' ? `ROLL UNDER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>` : `ROLL OVER <i class="fas fa-exchange-alt" style="color: var(--cyan);"></i>`;
-            updateDiceMath();
-        }
-
+        // ================= KAZINO =================
+        function toggleDiceCondition() { diceCondition = diceCondition === 'under' ? 'over' : 'under'; document.getElementById('dice-toggle').innerHTML = diceCondition === 'under' ? `ROLL UNDER <i class="fas fa-exchange-alt"></i>` : `ROLL OVER <i class="fas fa-exchange-alt"></i>`; updateDiceMath(); }
         function updateDiceMath() {
-            const slider = document.getElementById('dice-slider');
-            const target = parseFloat(slider.value);
-            const bet = parseInt(document.getElementById('dice-bet').value) || 0;
-            const percentage = target + "%";
-            slider.style.background = diceCondition === 'under' ? `linear-gradient(90deg, var(--green) ${percentage}, var(--red) ${percentage})` : `linear-gradient(90deg, var(--red) ${percentage}, var(--green) ${percentage})`;
-
-            let winChance = diceCondition === 'under' ? target : 99.99 - target;
-            let multiplier = 99 / winChance;
-            let profit = bet * multiplier;
-
-            document.getElementById('dice-chance').value = winChance.toFixed(2);
-            document.getElementById('dice-multiplier').value = multiplier.toFixed(4) + "x";
-            document.getElementById('dice-profit').value = profit.toFixed(2);
+            const slider = document.getElementById('dice-slider'); const target = parseFloat(slider.value); const bet = parseInt(document.getElementById('dice-bet').value) || 0;
+            slider.style.background = diceCondition === 'under' ? `linear-gradient(90deg, var(--green) ${target}%, var(--red) ${target}%)` : `linear-gradient(90deg, var(--red) ${target}%, var(--green) ${target}%)`;
+            let winChance = diceCondition === 'under' ? target : 99.99 - target; let multiplier = 99 / winChance;
+            document.getElementById('dice-chance').value = winChance.toFixed(2); document.getElementById('dice-multiplier').value = multiplier.toFixed(4) + "x"; document.getElementById('dice-profit').value = (bet * multiplier).toFixed(2);
         }
-
-        async function pollDiceHistory() {
-            try {
-                let res = await fetch(`${API_URL}/casino/history`);
-                let data = await res.json();
-                let html = "";
-                data.history.forEach(roll => { let cl = parseFloat(roll) >= 50 ? 'win' : 'loss'; html += `<div class="dice-history-item ${cl}">${roll}</div>`; });
-                document.getElementById('dice-history-ui').innerHTML = html;
-            } catch(e) {}
-        }
-
+        async function pollDiceHistory() { try { let res = await fetch(`${API_URL}/casino/history`); let data = await res.json(); document.getElementById('dice-history-ui').innerHTML = data.history.map(r => `<div class="dice-history-item ${parseFloat(r) >= 50 ? 'win' : 'loss'}">${r}</div>`).join(''); } catch(e) {} }
         async function playDice() {
-            const betVal = document.getElementById('dice-bet').value;
-            const resVal = document.getElementById('dice-resource').value;
-            const targetVal = document.getElementById('dice-slider').value;
-            const resDiv = document.getElementById('dice-result-msg');
-            resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ripo...</span>`;
-            try {
-                let res = await fetch(`${API_URL}/casino/play`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, resource: resVal, betAmount: betVal, target: targetVal, condition: diceCondition }) });
-                let data = await res.json();
-                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`;
-                else { serverData = data.player; updateUI(serverData); let col = data.isWin ? 'var(--green)' : 'var(--red)'; let sign = data.isWin ? '+' : '-'; resDiv.innerHTML = `<span style="color:${col}; font-size:20px;">[${data.roll}] ${sign}${data.isWin ? data.winAmount : betVal}</span>`; pollDiceHistory(); }
-            } catch (err) { resDiv.innerHTML = `<span style="color:var(--red)">Servera kļūda</span>`; }
+            let resDiv = document.getElementById('dice-result-msg'); resDiv.innerHTML = `<span style="color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ripo...</span>`;
+            try { let res = await fetch(`${API_URL}/casino/play`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId: tgId, resource: document.getElementById('dice-resource').value, betAmount: document.getElementById('dice-bet').value, target: document.getElementById('dice-slider').value, condition: diceCondition }) });
+                let data = await res.json(); if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`; else { serverData = data.player; updateUI(serverData); let col = data.isWin ? 'var(--green)' : 'var(--red)'; resDiv.innerHTML = `<span style="color:${col}; font-size:20px;">[${data.roll}] ${data.isWin ? '+' : '-'}${data.isWin ? data.winAmount : document.getElementById('dice-bet').value}</span>`; pollDiceHistory(); }
+            } catch (err) {}
         }
 
-        // ================= PĒTNIECĪBA =================
-        function renderResearch(p) {
-            let html = "";
-            let catColors = { 'EKO': '#ffcc00', 'ZIN': '#c77dff', 'MIL': '#ff2a2a' };
+        // ================= JAUNAIS PĒTNIECĪBAS KOKS =================
+        function setResearchTab(cat) {
+            currentResearchCategory = cat;
+            document.querySelectorAll('#tab-research .market-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-res-${cat.toLowerCase()}`).classList.add('active');
+            renderResearchUI();
+        }
 
-            for(let key in p.researchTree) {
-                let tech = p.researchTree[key];
-                let isDone = p.researches[key];
-                let reqMet = !tech.req || p.researches[tech.req];
-                let color = catColors[tech.cat];
+        function renderResearchUI() {
+            if(!serverData) return;
+            let html = '<div style="display:grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 20px;">';
+            let catColors = { 'NAV': '#00f0ff', 'ECO': '#ffcc00', 'SCI': '#c77dff', 'MIL': '#ff2a2a' };
+            let color = catColors[currentResearchCategory];
+
+            // Atlasam tikai aktīvās kategorijas pētījumus (kārtojam pēc ID nosaukuma garuma/numura)
+            let branchTechs = Object.values(serverData.researchTree).filter(t => t.category === currentResearchCategory);
+            branchTechs.sort((a,b) => parseInt(a.id.replace(/[^\d]/g, '')) - parseInt(b.id.replace(/[^\d]/g, '')));
+
+            branchTechs.forEach(tech => {
+                let isDone = serverData.researches[tech.id];
+                let reqMet = !tech.req || serverData.researches[tech.req];
                 
                 if (isDone) {
-                    html += `<div class="mission-row" style="border-color:${color}; opacity:0.6;"><div><div style="font-weight:700; color:${color};">[${tech.cat}] ${tech.name}</div><span style="font-size:11px; color:var(--grey);">${tech.desc}</span></div><i class="fas fa-check" style="color:${color};"></i></div>`;
+                    html += `<div class="missions-panel" style="margin:0; border-color:${color}; opacity:0.5; padding:10px;"><div style="display:flex; justify-content:space-between;"><div><div style="font-weight:bold; color:${color};">${tech.name}</div><div style="font-size:11px; color:var(--grey);">${tech.desc}</div></div><i class="fas fa-check-circle" style="color:${color}; font-size:20px;"></i></div></div>`;
                 } else if (reqMet) {
-                    let canAfford = p.resources.research >= tech.cost;
-                    let btn = `<button class="btn-upgrade ${canAfford?'':'btn-disabled'}" onclick="buyTech('${key}')" style="width:80px; border-color:${color}; color:${color};">${tech.cost} RES</button>`;
-                    html += `<div class="mission-row"><div><div style="font-weight:700; color:#fff;">[${tech.cat}] ${tech.name}</div><span style="font-size:11px; color:var(--grey);">${tech.desc}</span></div>${btn}</div>`;
+                    let canAfford = serverData.resources.research >= tech.cost;
+                    let btn = `<button class="btn-full" style="border-color:${color}; color:${color}; margin-top:5px; ${canAfford?'':'opacity:0.5; pointer-events:none;'}" onclick="buyTech('${tech.id}')">IZPĒTĪT (${tech.cost} ⚛️)</button>`;
+                    html += `<div class="missions-panel" style="margin:0; border-color:${color}; box-shadow: 0 0 10px ${color}22; padding:10px;"><div style="font-weight:bold; color:#fff;">${tech.name}</div><div style="font-size:11px; color:var(--grey);">${tech.desc}</div>${btn}</div>`;
                 } else {
-                    html += `<div class="mission-row building-locked"><div><div style="font-weight:700; color:#fff;">🔒 [${tech.cat}] ${tech.name}</div><span style="font-size:11px; color:var(--grey);">Vajag: ${p.researchTree[tech.req].name}</span></div></div>`;
+                    html += `<div class="missions-panel" style="margin:0; border-color:#333; opacity:0.4; padding:10px;"><div style="font-weight:bold; color:#888;">🔒 Nezināma Tehnoloģija</div><div style="font-size:11px; color:var(--grey);">Nepieciešams: ${serverData.researchTree[tech.req].name}</div></div>`;
                 }
-            }
-            document.getElementById('research-list').innerHTML = html;
+            });
+
+            html += '</div>';
+            document.getElementById('research-tree-ui').innerHTML = html;
         }
 
         async function buyTech(techId) {
-            try {
-                let res = await fetch(`${API_URL}/research`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, techId}) });
-                let data = await res.json();
-                if(data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
+            try { let res = await fetch(`${API_URL}/research`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, techId}) });
+                let data = await res.json(); if(data.error) alert(data.error); else { serverData = data; updateUI(serverData); }
             } catch(e) {}
         }
 
-        // ================= ĒKAS (Detalizētas) =================
+        // ================= ĒKAS UN CITS =================
         const effectNames = { maxPopulation: "Max Iedzīvotāji", actionPoints: "Rīcības Punkti", maxScientists: "Max Zinātnieki", productionPerScientist: "Pētniecība/h", upkeepPerScientist: "Kredīti/h izmaksas", maxUpgradeLevel: "Max Līmenis", travelTimeReductionPercent: "Laiks (-%)", baseHappinessBonus: "Apmierinātība", maxWorkers: "Darba Vietas", capacityPerResource: "Kapacitāte", protectedPerResource: "Aizsargātie Res.", loadingSpeedPerMinute: "Iekraušanas Ātrums", tradeCapacity: "Tirdzniecība", defenseBonus: "Aizsardzība", wallHitPoints: "Izturība", buildSpeedMultiplier: "Būvēšanas Laiks", raidPointsPerHour: "Reidu Punkti/h" };
 
         function renderBuildings(p) {
             let bHtml = "";
             for (const [key, bData] of Object.entries(p.buildingCatalog)) {
-                let btnHtml = "";
-                let isThisUpgrading = p.construction && p.construction.bKey === key;
+                let btnHtml = ""; let isThisUpgrading = p.construction && p.construction.bKey === key;
                 let canAfford = p.resources.metal >= bData.costMetal && p.resources.silicon >= bData.costChips;
-
-                if (isThisUpgrading) {
-                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%;">${formatTime(p.construction.endTime - Date.now())}</button>`;
-                } else if (p.construction) {
-                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%;">GAIDI</button>`;
-                } else if (!bData.allowed) {
-                    btnHtml = bData.error.includes("maksimālais") ? `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--green); color:var(--green)">MAX LVL</button>` : `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--red); color:var(--red)"><i class="fas fa-lock"></i> LOCK</button>`;
-                } else if (!canAfford) {
-                    btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--grey); color:var(--grey)">TRŪKST RES</button>`;
-                } else {
-                    btnHtml = `<button class="btn-upgrade" onclick="upgradeBuilding('${key}')" style="width:100%;">UZLABOT</button>`;
-                }
+                if (isThisUpgrading) btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%;">${formatTime(p.construction.endTime - Date.now())}</button>`;
+                else if (p.construction) btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%;">GAIDI</button>`;
+                else if (!bData.allowed) btnHtml = bData.error.includes("maksimālais") ? `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--green); color:var(--green)">MAX LVL</button>` : `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--red); color:var(--red)"><i class="fas fa-lock"></i></button>`;
+                else if (!canAfford) btnHtml = `<button class="btn-upgrade btn-disabled" style="width:100%; border-color:var(--grey); color:var(--grey)">TRŪKST</button>`;
+                else btnHtml = `<button class="btn-upgrade" onclick="upgradeBuilding('${key}')" style="width:100%;">UZLABOT</button>`;
 
                 let effectHtml = "";
                 for (let k in bData.effects) {
-                    let name = effectNames[k] || k;
-                    let curV = bData.effects[k]; let nxtV = bData.nextEffects[k];
+                    let name = effectNames[k] || k; let curV = bData.effects[k]; let nxtV = bData.nextEffects[k];
                     if (typeof curV === 'number' && !Number.isInteger(curV)) curV = curV.toFixed(2);
                     if (typeof nxtV === 'number' && !Number.isInteger(nxtV)) nxtV = nxtV.toFixed(2);
                     if (bData.currentLvl === 0) effectHtml += `<div>${name}: <span style="color:var(--green)">${nxtV}</span></div>`;
@@ -445,102 +363,27 @@
                     else effectHtml += `<div>${name}: <b>${curV}</b> (Max)</div>`;
                 }
 
-                let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px;"><i class="fas fa-exclamation-circle"></i> ${bData.error}</div>` : "";
+                let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px;">${bData.error}</div>` : "";
                 let isLocked = !bData.allowed && bData.currentLvl === 0;
 
-                bHtml += `
-                <div class="building-item ${isLocked ? 'building-locked' : ''}" style="align-items: flex-start; margin-bottom: 15px;">
-                    <div style="flex: 1; padding-right: 10px;">
-                        <div style="font-weight:700; color:#fff; font-size:14px;">${isLocked ? '🔒 ' : ''}${bData.name} <span style="color:var(--cyan); font-size:12px; margin-left:5px;">Lvl ${bData.currentLvl}</span></div>
-                        <div style="font-size:10px; color:var(--grey); margin-top:2px;">${bData.description}</div>
-                        ${effectHtml ? `<div style="font-size:11px; margin-top:6px; color:#fff; background:rgba(0,0,0,0.3); padding:6px; border-radius:4px; border:1px solid rgba(255,255,255,0.05);">${effectHtml}</div>` : ''}
-                        ${bData.currentLvl < 50 && (!bData.error.includes("maksimālais")) ? `<div style="font-size:11px; margin-top:6px; color:var(--grey); display:flex; gap:10px; align-items:center;"><span><i class="fas fa-hammer"></i> ${bData.costMetal}</span>${bData.costChips > 0 ? `<span><i class="fas fa-microchip" style="color:var(--blue)"></i> ${bData.costChips}</span>` : ''}<span><i class="far fa-clock" style="color:var(--yellow)"></i> ${formatTime(bData.timeMs)}</span></div>` : ''}
-                        ${errorText}
-                    </div>
-                    <div style="width: 80px; flex-shrink: 0; margin-top: 2px;">${btnHtml}</div>
-                </div>`;
+                bHtml += `<div class="building-item ${isLocked ? 'building-locked' : ''}" style="align-items: flex-start; margin-bottom: 15px;"><div style="flex: 1; padding-right: 10px;"><div style="font-weight:700; color:#fff; font-size:14px;">${isLocked ? '🔒 ' : ''}${bData.name} <span style="color:var(--cyan); font-size:12px; margin-left:5px;">Lvl ${bData.currentLvl}</span></div><div style="font-size:10px; color:var(--grey); margin-top:2px;">${bData.description}</div>${effectHtml ? `<div style="font-size:11px; margin-top:6px; color:#fff; background:rgba(0,0,0,0.3); padding:6px; border-radius:4px;">${effectHtml}</div>` : ''}${bData.currentLvl < 50 && (!bData.error.includes("maksimālais")) ? `<div style="font-size:11px; margin-top:6px; color:var(--grey); display:flex; gap:10px;"><span><i class="fas fa-hammer"></i> ${bData.costMetal}</span>${bData.costChips > 0 ? `<span><i class="fas fa-microchip" style="color:var(--blue)"></i> ${bData.costChips}</span>` : ''}<span><i class="far fa-clock" style="color:var(--yellow)"></i> ${formatTime(bData.timeMs)}</span></div>` : ''}${errorText}</div><div style="width: 80px; flex-shrink: 0; margin-top: 2px;">${btnHtml}</div></div>`;
             }
             document.getElementById('buildings-list').innerHTML = bHtml;
         }
 
-        async function upgradeBuilding(bKey) { 
-            await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId, bKey }) }); 
-            fetchPlayerData();
-        }
-
-        // ================= CITS =================
-        function updateSliders() {
-            let slM = document.getElementById('sl-mWork'), slC = document.getElementById('sl-cWork'), slS = document.getElementById('sl-sWork');
-            slM.dataset.touched = "true";
-            let mW = parseInt(slM.value), cW = parseInt(slC.value), sW = parseInt(slS.value);
-            let free = Math.floor(serverData.population.total) - (mW + cW + sW);
-            document.getElementById('free-agents').innerText = free < 0 ? "LIMITS!" : free;
-            document.getElementById('txt-mWork').innerText = `${mW}/${slM.max}`;
-            document.getElementById('txt-cWork').innerText = `${cW}/${slC.max}`;
-            document.getElementById('txt-sWork').innerText = `${sW}/${slS.max}`;
-        }
+        async function upgradeBuilding(bKey) { await fetch(`${API_URL}/upgrade`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tgId, bKey }) }); fetchPlayerData(); }
+        function updateSliders() { let slM = document.getElementById('sl-mWork'), slC = document.getElementById('sl-cWork'), slS = document.getElementById('sl-sWork'); slM.dataset.touched = "true"; let mW = parseInt(slM.value), cW = parseInt(slC.value), sW = parseInt(slS.value); let free = Math.floor(serverData.population.total) - (mW + cW + sW); document.getElementById('free-agents').innerText = free < 0 ? "LIMITS!" : free; document.getElementById('txt-mWork').innerText = `${mW}/${slM.max}`; document.getElementById('txt-cWork').innerText = `${cW}/${slC.max}`; document.getElementById('txt-sWork').innerText = `${sW}/${slS.max}`; }
+        async function saveWorkers() { let slM = document.getElementById('sl-mWork'), slC = document.getElementById('sl-cWork'), slS = document.getElementById('sl-sWork'); await fetch(`${API_URL}/allocate-workers`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ tgId, mWork: slM.value, cWork: slC.value, sWork: slS.value }) }); fetchPlayerData(); }
+        function updateArmySlider() { let val = parseInt(document.getElementById('army-slider').value) || 0; let timePerUnit = 15000 * Math.pow(0.95, serverData?.buildings?.combat_node || 0); let costRed = serverData?.bonuses?.unitCost || 1.0; document.getElementById('army-count-text').innerText = `${val} gab.`; document.getElementById('army-time-text').innerText = formatTime(val * timePerUnit); document.getElementById('army-cost-text').innerText = `${Math.floor(val * 300 * costRed)} Metāls | ${Math.floor(val * 100 * costRed)} Čipi`; }
+        async function trainArmy() { let amount = parseInt(document.getElementById('army-slider').value) || 0; if(amount <= 0) return; try { await fetch(`${API_URL}/army/train`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, amount}) }); fetchPlayerData(); } catch(e) {} }
         
-        async function saveWorkers() {
-            let slM = document.getElementById('sl-mWork'), slC = document.getElementById('sl-cWork'), slS = document.getElementById('sl-sWork');
-            await fetch(`${API_URL}/allocate-workers`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ tgId, mWork: slM.value, cWork: slC.value, sWork: slS.value }) });
-            fetchPlayerData();
-        }
-
-        function updateArmySlider() {
-            let val = parseInt(document.getElementById('army-slider').value) || 0;
-            let nodeLvl = serverData?.buildings?.combat_node || 0;
-            let timePerUnit = 15000 * Math.pow(0.95, nodeLvl); 
-            let costRed = serverData?.researches?.mil4 ? 0.9 : 1.0;
-            document.getElementById('army-count-text').innerText = `${val} gab.`;
-            document.getElementById('army-time-text').innerText = formatTime(val * timePerUnit);
-            document.getElementById('army-cost-text').innerText = `${Math.floor(val * 300 * costRed)} Metāls | ${Math.floor(val * 100 * costRed)} Čipi`;
-        }
-
-        async function trainArmy() {
-            let amount = parseInt(document.getElementById('army-slider').value) || 0;
-            if(amount <= 0) return;
-            try {
-                let res = await fetch(`${API_URL}/army/train`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, amount}) });
-                serverData = await res.json(); updateUI(serverData);
-            } catch(e) {}
-        }
-
-        // TIRGUS UN PVP
-        function setMarketTab(tab) {
-            document.getElementById('btn-tab-buy').classList.remove('active'); document.getElementById('btn-tab-sell').classList.remove('active');
-            document.getElementById('market-buy-section').style.display = 'none'; document.getElementById('market-sell-section').style.display = 'none';
-            document.getElementById(`btn-tab-${tab}`).classList.add('active'); document.getElementById(`market-${tab}-section`).style.display = 'block';
-            if(tab==='buy') loadMarket();
-        }
-        async function loadMarket() {
-            let list = document.getElementById('market-list'); list.innerHTML = `<div style="text-align:center; color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ielādē tirgu...</div>`;
-            try {
-                let res = await fetch(`${API_URL}/market`); let items = await res.json();
-                if(items.length === 0) { list.innerHTML = `<div style="text-align:center; color:var(--grey);">Tirgus ir tukšs!</div>`; return; }
-                list.innerHTML = items.map(i => `<div class="mission-row"><div><div style="font-weight:700; color:#fff;"><i class="fas fa-user"></i> ${i.sellerName}</div><span style="font-size:12px; color:${i.resource==='metal'?'var(--grey)':'var(--blue)'};">Pārdod: ${i.amount} ${i.resource==='metal'?'Metālu':'Čipus'}</span></div><div style="text-align:right;"><div style="font-size:14px; font-weight:bold; color:var(--yellow);">${i.totalPrice} Kredīti</div><button class="btn-upgrade" onclick="buyMarketItem(${i.id})" style="padding:4px 8px; margin-top:2px;">PIRKT</button></div></div>`).join('');
-            } catch(e) {}
-        }
-        async function sellOnMarket() {
-            let resType = document.getElementById('sell-res').value, amount = document.getElementById('sell-amount').value, price = document.getElementById('sell-price').value;
-            let msg = document.getElementById('market-msg'); msg.innerHTML = `<span style="color:var(--grey)"><i class="fas fa-spinner fa-spin"></i> Liek tirgū...</span>`;
-            try { let res = await fetch(`${API_URL}/market/sell`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, resource: resType, amount, price}) }); let data = await res.json();
-                if(data.error) msg.innerHTML = `<span style="color:var(--red)">${data.error}</span>`; else { msg.innerHTML = `<span style="color:var(--green)">Izlikts pārdošanā!</span>`; serverData=data.player; updateUI(serverData); }
-            } catch(e) {}
-        }
+        // MARKET & PVP funkcijas (Nemainīgas, strādā pa taisno ar API)
+        function setMarketTab(tab) { document.getElementById('btn-tab-buy').classList.remove('active'); document.getElementById('btn-tab-sell').classList.remove('active'); document.getElementById('market-buy-section').style.display = 'none'; document.getElementById('market-sell-section').style.display = 'none'; document.getElementById(`btn-tab-${tab}`).classList.add('active'); document.getElementById(`market-${tab}-section`).style.display = 'block'; if(tab==='buy') loadMarket(); }
+        async function loadMarket() { let list = document.getElementById('market-list'); list.innerHTML = `<div style="text-align:center; color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ielādē tirgu...</div>`; try { let res = await fetch(`${API_URL}/market`); let items = await res.json(); if(items.length === 0) { list.innerHTML = `<div style="text-align:center; color:var(--grey);">Tirgus ir tukšs!</div>`; return; } list.innerHTML = items.map(i => `<div class="mission-row"><div><div style="font-weight:700; color:#fff;"><i class="fas fa-user"></i> ${i.sellerName}</div><span style="font-size:12px; color:${i.resource==='metal'?'var(--grey)':'var(--blue)'};">Pārdod: ${i.amount} ${i.resource==='metal'?'Metālu':'Čipus'}</span></div><div style="text-align:right;"><div style="font-size:14px; font-weight:bold; color:var(--yellow);">${i.totalPrice} Kredīti</div><button class="btn-upgrade" onclick="buyMarketItem(${i.id})" style="padding:4px 8px; margin-top:2px;">PIRKT</button></div></div>`).join(''); } catch(e) {} }
+        async function sellOnMarket() { let resType = document.getElementById('sell-res').value, amount = document.getElementById('sell-amount').value, price = document.getElementById('sell-price').value; let msg = document.getElementById('market-msg'); msg.innerHTML = `<span style="color:var(--grey)"><i class="fas fa-spinner fa-spin"></i> Liek tirgū...</span>`; try { await fetch(`${API_URL}/market/sell`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, resource: resType, amount, price}) }); fetchPlayerData(); msg.innerHTML = `<span style="color:var(--green)">Izlikts pārdošanā!</span>`; } catch(e) {} }
         async function buyMarketItem(id) { await fetch(`${API_URL}/market/buy`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, orderId: id}) }); fetchPlayerData(); setMarketTab('buy'); }
-        async function loadTargets() {
-            let list = document.getElementById('pvp-targets-list'); list.innerHTML = `<div style="text-align:center; color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Skennē tīklu...</div>`;
-            try { let res = await fetch(`${API_URL}/pvp/targets/${tgId}`); let targets = await res.json();
-                if (targets.length === 0) { list.innerHTML = `<div style="text-align:center; color:var(--red);">Tīklā nav neviena mērķa!</div>`; return; }
-                list.innerHTML = targets.map(t => `<div class="mission-row" style="border-color: #331111;"><div><div style="font-weight:700; color:#fff;"><i class="fas fa-user-secret"></i> ${t.name}</div><span style="font-size:11px; color:var(--grey);">Bāzes Līmenis: ${t.level}</span></div><button class="btn-upgrade" onclick="attackPlayer(${t.tgId})" style="border-color:var(--red); color:var(--red); width: 80px;">UZBRUKT</button></div>`).join('');
-            } catch (err) {}
-        }
-        async function attackPlayer(targetId) {
-            let resDiv = document.getElementById('pvp-result-msg'); resDiv.innerHTML = `<span style="color:var(--red);"><i class="fas fa-sync-alt fa-spin"></i> Sūta armiju...</span>`;
-            try { let res = await fetch(`${API_URL}/pvp/attack`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ tgId, targetId }) }); let data = await res.json();
-                if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`; else { serverData = data.player; updateUI(serverData); let col = data.isWin ? "var(--green)" : "var(--red)"; resDiv.innerHTML = `<span class="roll-result-anim" style="color:${col}">${data.message}</span>`; loadTargets(); }
-            } catch (err) {}
-        }
+        async function loadTargets() { let list = document.getElementById('pvp-targets-list'); list.innerHTML = `<div style="text-align:center; color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Skennē tīklu...</div>`; try { let res = await fetch(`${API_URL}/pvp/targets/${tgId}`); let targets = await res.json(); if (targets.length === 0) { list.innerHTML = `<div style="text-align:center; color:var(--red);">Tīklā nav neviena mērķa!</div>`; return; } list.innerHTML = targets.map(t => `<div class="mission-row" style="border-color: #331111;"><div><div style="font-weight:700; color:#fff;"><i class="fas fa-user-secret"></i> ${t.name}</div><span style="font-size:11px; color:var(--grey);">Bāzes Līmenis: ${t.level}</span></div><button class="btn-upgrade" onclick="attackPlayer(${t.tgId})" style="border-color:var(--red); color:var(--red); width: 80px;">UZBRUKT</button></div>`).join(''); } catch (err) {} }
+        async function attackPlayer(targetId) { let resDiv = document.getElementById('pvp-result-msg'); resDiv.innerHTML = `<span style="color:var(--red);"><i class="fas fa-sync-alt fa-spin"></i> Sūta armiju...</span>`; try { let res = await fetch(`${API_URL}/pvp/attack`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ tgId, targetId }) }); let data = await res.json(); if (data.error) resDiv.innerHTML = `<span style="color:var(--red)">${data.error}</span>`; else { serverData = data.player; updateUI(serverData); resDiv.innerHTML = `<span style="color:${data.isWin ? "var(--green)" : "var(--red)"}">${data.message}</span>`; loadTargets(); } } catch (err) {} }
 
         updateDiceMath();
         setInterval(() => { if(serverData) updateUI(serverData); }, 1000);
