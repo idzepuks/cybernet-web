@@ -333,7 +333,7 @@
                     techsInRow.forEach(tech => {
                         let isDone = serverData.researches[tech.id];
                         let reqMet = !tech.req || serverData.researches[tech.req];
-                        let color = catColors[tech.category];
+                        let color = catColors[tech.category] || '#fff';
                         
                         if (isDone) {
                             html += `<div class="missions-panel" style="margin:0; border-color:${color}; opacity:0.6; padding:10px; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1;">
@@ -366,10 +366,11 @@
                                 ${btnHTML}
                             </div>`;
                         } else {
+                            let reqName = serverData.researchTree[tech.req] ? serverData.researchTree[tech.req].name : "Iepriekšējais pētījums";
                             html += `<div class="missions-panel" style="margin:0; border-color:#222; background:transparent; padding:10px; opacity:0.4;">
                                 <div style="font-size:9px; color:var(--grey); font-weight:bold;">[${catNames[tech.category]}]</div>
                                 <div style="font-weight:bold; color:#666; font-size:14px;">🔒 Nezināma Tehnoloģija</div>
-                                <div style="font-size:11px; color:var(--grey); margin-top:2px;">Nepieciešams iepriekš izpētīt: ${serverData.researchTree[tech.req].name}</div>
+                                <div style="font-size:11px; color:var(--grey); margin-top:2px;">Nepieciešams iepriekš izpētīt: ${reqName}</div>
                             </div>`;
                         }
                     });
@@ -411,7 +412,7 @@
                     else effectHtml += `<div>${name}: <b>${curV}</b> (Max)</div>`;
                 }
 
-                let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px; font-weight:bold;">${bData.error}</div>` : "";
+                let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px;">${bData.error}</div>` : "";
                 let isLocked = !bData.allowed && bData.currentLvl === 0;
 
                 bHtml += `<div class="building-item ${isLocked ? 'building-locked' : ''}" style="align-items: flex-start; margin-bottom: 15px;"><div style="flex: 1; padding-right: 10px;"><div style="font-weight:700; color:#fff; font-size:14px;">${isLocked ? '🔒 ' : ''}${bData.name} <span style="color:var(--cyan); font-size:12px; margin-left:5px;">Lvl ${bData.currentLvl}</span></div><div style="font-size:10px; color:var(--grey); margin-top:2px;">${bData.description}</div>${effectHtml ? `<div style="font-size:11px; margin-top:6px; color:#fff; background:rgba(0,0,0,0.3); padding:6px; border-radius:4px;">${effectHtml}</div>` : ''}${bData.currentLvl < 50 && (!bData.error.includes("maksimālais")) ? `<div style="font-size:11px; margin-top:6px; color:var(--grey); display:flex; gap:10px;"><span><i class="fas fa-hammer"></i> ${bData.costMetal}</span>${bData.costChips > 0 ? `<span><i class="fas fa-microchip" style="color:var(--blue)"></i> ${bData.costChips}</span>` : ''}<span><i class="far fa-clock" style="color:var(--yellow)"></i> ${formatTime(bData.timeMs)}</span></div>` : ''}${errorText}</div><div style="width: 80px; flex-shrink: 0; margin-top: 2px;">${btnHtml}</div></div>`;
