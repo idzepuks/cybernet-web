@@ -181,14 +181,11 @@
     </div>
 
     <div id="tab-research" class="tab-content">
-        <h3 style="color: #c77dff; margin-left: 15px;"><i class="fas fa-microscope"></i> PĒTNIECĪBAS KOKS</h3>
-        <div style="display:flex; margin: 0 15px 15px 15px; gap:5px;">
-            <button class="market-tab-btn active" id="btn-res-nav" onclick="setResearchTab('NAV')">TĪKLOS</button>
-            <button class="market-tab-btn" id="btn-res-eco" onclick="setResearchTab('ECO')">EKO</button>
-            <button class="market-tab-btn" id="btn-res-sci" onclick="setResearchTab('SCI')">ZINĀTNE</button>
-            <button class="market-tab-btn" id="btn-res-mil" onclick="setResearchTab('MIL')">KAUJA</button>
+        <div style="background:var(--bg-panel); padding:15px; position:sticky; top:0; z-index:10; border-bottom:1px solid var(--border-dark);">
+            <h3 style="color: #c77dff; margin:0;"><i class="fas fa-microscope"></i> PĒTNIECĪBAS KOKS</h3>
+            <div style="font-size:11px; color:var(--grey); margin-top:5px;">Pētījumi atbloķējas atbilstoši tavam "Neural Hub" (Akadēmijas) līmenim.</div>
         </div>
-        <div id="research-tree-ui" style="padding: 0 15px;">Ielādē...</div>
+        <div id="research-tree-ui" style="padding: 15px;">Ielādē koku...</div>
     </div>
 
     <div id="tab-missions" class="tab-content">
@@ -221,7 +218,6 @@
         const tgId = tg?.initDataUnsafe?.user?.id || 123456789;
         let serverData = null;
         let diceCondition = 'under';
-        let currentResearchCategory = 'NAV';
 
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -296,40 +292,92 @@
             } catch (err) {}
         }
 
-        // ================= JAUNAIS PĒTNIECĪBAS KOKS =================
-        function setResearchTab(cat) {
-            currentResearchCategory = cat;
-            document.querySelectorAll('#tab-research .market-tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-res-${cat.toLowerCase()}`).classList.add('active');
-            renderResearchUI();
-        }
-
+        // ================= JAUNAIS 50 LĪMEŅU PĒTNIECĪBAS KOKS =================
         function renderResearchUI() {
             if(!serverData) return;
-            let html = '<div style="display:grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 20px;">';
-            let catColors = { 'NAV': '#00f0ff', 'ECO': '#ffcc00', 'SCI': '#c77dff', 'MIL': '#ff2a2a' };
-            let color = catColors[currentResearchCategory];
+            let html = '';
 
-            // Atlasam tikai aktīvās kategorijas pētījumus (kārtojam pēc ID nosaukuma garuma/numura)
-            let branchTechs = Object.values(serverData.researchTree).filter(t => t.category === currentResearchCategory);
-            branchTechs.sort((a,b) => parseInt(a.id.replace(/[^\d]/g, '')) - parseInt(b.id.replace(/[^\d]/g, '')));
+            if (serverData.researchQueue) {
+                let activeTech = serverData.researchTree[serverData.researchQueue.techId];
+                let timeLeft = serverData.researchQueue.endTime - Date.now();
+                html += `
+                <div class="missions-panel" style="border-color:var(--yellow); text-align:center; box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); margin:0 0 20px 0;">
+                    <h4 style="color:var(--yellow); margin:0 0 5px 0;"><i class="fas fa-spinner fa-spin"></i> NOTIEK PĒTNIECĪBA</h4>
+                    <div style="font-weight:bold; font-size:16px; color:#fff;">${activeTech.name}</div>
+                    <div style="font-size:22px; color:var(--yellow); font-weight:bold; margin-top:5px;">${formatTime(timeLeft)}</div>
+                </div>`;
+                if(timeLeft <= 0) fetchPlayerData();
+            }
 
-            branchTechs.forEach(tech => {
-                let isDone = serverData.researches[tech.id];
-                let reqMet = !tech.req || serverData.researches[tech.req];
+            let acadLvl = serverData.buildings.neural_hub || 0;
+            let catColors = { 'NAV': '#00f0ff', 'ECO': '#ffcc00', 'SCI': '#c77dff', 'MIL': '#ff2a2a', 'AI': '#00e700' };
+            let catNames = { 'NAV': 'TĪKLOS', 'ECO': 'EKO', 'SCI': 'ZINĀTNE', 'MIL': 'KAUJA', 'AI': 'MĀKSL. INTEL.' };
+
+            for (let row = 1; row <= 50; row++) {
+                let techsInRow = Object.values(serverData.researchTree).filter(t => t.reqLvl === row);
                 
-                if (isDone) {
-                    html += `<div class="missions-panel" style="margin:0; border-color:${color}; opacity:0.5; padding:10px;"><div style="display:flex; justify-content:space-between;"><div><div style="font-weight:bold; color:${color};">${tech.name}</div><div style="font-size:11px; color:var(--grey);">${tech.desc}</div></div><i class="fas fa-check-circle" style="color:${color}; font-size:20px;"></i></div></div>`;
-                } else if (reqMet) {
-                    let canAfford = serverData.resources.research >= tech.cost;
-                    let btn = `<button class="btn-full" style="border-color:${color}; color:${color}; margin-top:5px; ${canAfford?'':'opacity:0.5; pointer-events:none;'}" onclick="buyTech('${tech.id}')">IZPĒTĪT (${tech.cost} ⚛️)</button>`;
-                    html += `<div class="missions-panel" style="margin:0; border-color:${color}; box-shadow: 0 0 10px ${color}22; padding:10px;"><div style="font-weight:bold; color:#fff;">${tech.name}</div><div style="font-size:11px; color:var(--grey);">${tech.desc}</div>${btn}</div>`;
-                } else {
-                    html += `<div class="missions-panel" style="margin:0; border-color:#333; opacity:0.4; padding:10px;"><div style="font-weight:bold; color:#888;">🔒 Nezināma Tehnoloģija</div><div style="font-size:11px; color:var(--grey);">Nepieciešams: ${serverData.researchTree[tech.req].name}</div></div>`;
-                }
-            });
+                if (techsInRow.length > 0) {
+                    let isUnlocked = acadLvl >= row;
+                    html += `
+                    <div style="margin-bottom: 25px;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                            <div style="height:1px; flex:1; background:var(--border-dark);"></div>
+                            <div style="font-size:13px; font-weight:bold; color:${isUnlocked ? 'var(--cyan)' : 'var(--red)'}; text-shadow: 0 0 5px #000;">
+                                ${isUnlocked ? '<i class="fas fa-unlock"></i>' : '<i class="fas fa-lock"></i>'} LĪMENIS ${row}
+                            </div>
+                            <div style="height:1px; flex:1; background:var(--border-dark);"></div>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr; gap: 10px;">
+                    `;
 
-            html += '</div>';
+                    techsInRow.forEach(tech => {
+                        let isDone = serverData.researches[tech.id];
+                        let reqMet = !tech.req || serverData.researches[tech.req];
+                        let color = catColors[tech.category];
+                        
+                        if (isDone) {
+                            html += `<div class="missions-panel" style="margin:0; border-color:${color}; opacity:0.6; padding:10px; display:flex; justify-content:space-between; align-items:center;"><div style="flex:1;">
+                                <div style="font-size:9px; color:${color}; font-weight:bold;">[${catNames[tech.category]}]</div>
+                                <div style="font-weight:bold; color:#fff; font-size:14px;">${tech.name}</div>
+                                <div style="font-size:11px; color:var(--grey);">${tech.desc}</div>
+                            </div><i class="fas fa-check-circle" style="color:${color}; font-size:24px;"></i></div>`;
+                        } else if (reqMet) {
+                            let canAfford = serverData.resources.research >= tech.cost;
+                            let isBusy = serverData.researchQueue !== null;
+                            let btnHTML = "";
+                            
+                            if (!isUnlocked) {
+                                btnHTML = `<div style="text-align:center; padding:8px; margin-top:8px; background:rgba(255,42,42,0.1); border:1px solid var(--red); color:var(--red); border-radius:6px; font-size:11px; font-weight:bold;"><i class="fas fa-lock"></i> Vajag Akadēmijas Lvl ${row}</div>`;
+                            } else if (isBusy) {
+                                btnHTML = `<button class="btn-full" style="border-color:var(--grey); color:var(--grey); opacity:0.5; pointer-events:none;">GAIDI</button>`;
+                            } else {
+                                btnHTML = `<button class="btn-full" style="border-color:${color}; color:${color}; margin-top:8px; ${canAfford?'':'opacity:0.5; pointer-events:none;'}" onclick="buyTech('${tech.id}')">PĒTĪT (${tech.cost} ⚛️)</button>`;
+                            }
+
+                            html += `<div class="missions-panel" style="margin:0; border-left:4px solid ${isUnlocked?color:'#333'}; padding:10px; background:rgba(255,255,255,0.02);">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div>
+                                        <div style="font-size:9px; color:${color}; font-weight:bold;">[${catNames[tech.category]}]</div>
+                                        <div style="font-weight:bold; color:#fff; font-size:15px;">${tech.name}</div>
+                                    </div>
+                                    <div style="font-size:12px; font-weight:bold; color:var(--grey);"><i class="far fa-clock" style="color:var(--yellow)"></i> ${formatTime(tech.timeMs)}</div>
+                                </div>
+                                <div style="font-size:11px; color:var(--grey); margin-top:2px;">${tech.desc}</div>
+                                ${btnHTML}
+                            </div>`;
+                        } else {
+                            html += `<div class="missions-panel" style="margin:0; border-color:#222; background:transparent; padding:10px; opacity:0.4;">
+                                <div style="font-size:9px; color:var(--grey); font-weight:bold;">[${catNames[tech.category]}]</div>
+                                <div style="font-weight:bold; color:#666; font-size:14px;">🔒 Nezināma Tehnoloģija</div>
+                                <div style="font-size:11px; color:var(--grey); margin-top:2px;">Nepieciešams iepriekš izpētīt: ${serverData.researchTree[tech.req].name}</div>
+                            </div>`;
+                        }
+                    });
+
+                    html += `</div></div>`;
+                }
+            }
+
             document.getElementById('research-tree-ui').innerHTML = html;
         }
 
@@ -363,7 +411,7 @@
                     else effectHtml += `<div>${name}: <b>${curV}</b> (Max)</div>`;
                 }
 
-                let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px;">${bData.error}</div>` : "";
+                let errorText = (!bData.allowed && !bData.error.includes("maksimālais") && !isThisUpgrading) ? `<div style="font-size:10px; color:var(--red); margin-top:4px; font-weight:bold;">${bData.error}</div>` : "";
                 let isLocked = !bData.allowed && bData.currentLvl === 0;
 
                 bHtml += `<div class="building-item ${isLocked ? 'building-locked' : ''}" style="align-items: flex-start; margin-bottom: 15px;"><div style="flex: 1; padding-right: 10px;"><div style="font-weight:700; color:#fff; font-size:14px;">${isLocked ? '🔒 ' : ''}${bData.name} <span style="color:var(--cyan); font-size:12px; margin-left:5px;">Lvl ${bData.currentLvl}</span></div><div style="font-size:10px; color:var(--grey); margin-top:2px;">${bData.description}</div>${effectHtml ? `<div style="font-size:11px; margin-top:6px; color:#fff; background:rgba(0,0,0,0.3); padding:6px; border-radius:4px;">${effectHtml}</div>` : ''}${bData.currentLvl < 50 && (!bData.error.includes("maksimālais")) ? `<div style="font-size:11px; margin-top:6px; color:var(--grey); display:flex; gap:10px;"><span><i class="fas fa-hammer"></i> ${bData.costMetal}</span>${bData.costChips > 0 ? `<span><i class="fas fa-microchip" style="color:var(--blue)"></i> ${bData.costChips}</span>` : ''}<span><i class="far fa-clock" style="color:var(--yellow)"></i> ${formatTime(bData.timeMs)}</span></div>` : ''}${errorText}</div><div style="width: 80px; flex-shrink: 0; margin-top: 2px;">${btnHtml}</div></div>`;
