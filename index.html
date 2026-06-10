@@ -215,10 +215,20 @@
     </div>
 
     <script>
-        const tg = window.Telegram?.WebApp;
-        if(tg) tg.expand();
+        // PĀRBAUDA VAI TG EKSISTĒ
+        let tgId = 123456789; // Default ID (ja atvērts ne-Telegram pārlūkā)
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            // Ja Telegram atgriež lietotāja datus, paņemam ID
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                tgId = tg.initDataUnsafe.user.id;
+            }
+        }
+
+        // TAVS SERVERA API LINKS
         const API_URL = "https://cybernet-sindicate.loca.lt/api"; 
-        const tgId = tg?.initDataUnsafe?.user?.id || 123456789;
+        
         let serverData = null;
         let diceCondition = 'under';
 
@@ -233,7 +243,13 @@
         }
 
         async function fetchPlayerData() {
-            try { let res = await fetch(`${API_URL}/player/${tgId}`); serverData = await res.json(); updateUI(serverData); } catch (err) {}
+            try { 
+                let res = await fetch(`${API_URL}/player/${tgId}`); 
+                serverData = await res.json(); 
+                updateUI(serverData); 
+            } catch (err) {
+                console.error("Servera kļūda:", err);
+            }
         }
 
         function formatTime(ms) {
@@ -279,7 +295,6 @@
             if(document.getElementById('tab-research').classList.contains('active')) renderResearchUI();
         }
 
-        // ================= KAZINO =================
         function toggleDiceCondition() { diceCondition = diceCondition === 'under' ? 'over' : 'under'; document.getElementById('dice-toggle').innerHTML = diceCondition === 'under' ? `ROLL UNDER <i class="fas fa-exchange-alt"></i>` : `ROLL OVER <i class="fas fa-exchange-alt"></i>`; updateDiceMath(); }
         function updateDiceMath() {
             const slider = document.getElementById('dice-slider'); const target = parseFloat(slider.value); const bet = parseInt(document.getElementById('dice-bet').value) || 0;
@@ -295,7 +310,6 @@
             } catch (err) {}
         }
 
-        // ================= JAUNAIS 50 LĪMEŅU PĒTNIECĪBAS KOKS =================
         function renderResearchUI() {
             if(!serverData) return;
             let html = '';
@@ -391,7 +405,6 @@
             } catch(e) {}
         }
 
-        // ================= ĒKAS UN CITS =================
         const effectNames = { maxPopulation: "Max Iedzīvotāji", actionPoints: "Rīcības Punkti", maxScientists: "Max Zinātnieki", productionPerScientist: "Pētniecība/h", upkeepPerScientist: "Kredīti/h izmaksas", maxUpgradeLevel: "Max Līmenis", travelTimeReductionPercent: "Laiks (-%)", baseHappinessBonus: "Apmierinātība", maxWorkers: "Darba Vietas", capacityPerResource: "Kapacitāte", protectedPerResource: "Aizsargātie Res.", loadingSpeedPerMinute: "Iekraušanas Ātrums", tradeCapacity: "Tirdzniecība", defenseBonus: "Aizsardzība", wallHitPoints: "Izturība", buildSpeedMultiplier: "Būvēšanas Laiks", raidPointsPerHour: "Reidu Punkti/h" };
 
         function renderBuildings(p) {
@@ -429,7 +442,6 @@
         function updateArmySlider() { let val = parseInt(document.getElementById('army-slider').value) || 0; let timePerUnit = 15000 * Math.pow(0.95, serverData?.buildings?.combat_node || 0); let costRed = serverData?.bonuses?.unitCost || 1.0; document.getElementById('army-count-text').innerText = `${val} gab.`; document.getElementById('army-time-text').innerText = formatTime(val * timePerUnit); document.getElementById('army-cost-text').innerText = `${Math.floor(val * 300 * costRed)} Metāls | ${Math.floor(val * 100 * costRed)} Čipi`; }
         async function trainArmy() { let amount = parseInt(document.getElementById('army-slider').value) || 0; if(amount <= 0) return; try { await fetch(`${API_URL}/army/train`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, amount}) }); fetchPlayerData(); } catch(e) {} }
         
-        // MARKET & PVP funkcijas (Nemainīgas, strādā pa taisno ar API)
         function setMarketTab(tab) { document.getElementById('btn-tab-buy').classList.remove('active'); document.getElementById('btn-tab-sell').classList.remove('active'); document.getElementById('market-buy-section').style.display = 'none'; document.getElementById('market-sell-section').style.display = 'none'; document.getElementById(`btn-tab-${tab}`).classList.add('active'); document.getElementById(`market-${tab}-section`).style.display = 'block'; if(tab==='buy') loadMarket(); }
         async function loadMarket() { let list = document.getElementById('market-list'); list.innerHTML = `<div style="text-align:center; color:var(--grey);"><i class="fas fa-spinner fa-spin"></i> Ielādē tirgu...</div>`; try { let res = await fetch(`${API_URL}/market`); let items = await res.json(); if(items.length === 0) { list.innerHTML = `<div style="text-align:center; color:var(--grey);">Tirgus ir tukšs!</div>`; return; } list.innerHTML = items.map(i => `<div class="mission-row"><div><div style="font-weight:700; color:#fff;"><i class="fas fa-user"></i> ${i.sellerName}</div><span style="font-size:12px; color:${i.resource==='metal'?'var(--grey)':'var(--blue)'};">Pārdod: ${i.amount} ${i.resource==='metal'?'Metālu':'Čipus'}</span></div><div style="text-align:right;"><div style="font-size:14px; font-weight:bold; color:var(--yellow);">${i.totalPrice} Kredīti</div><button class="btn-upgrade" onclick="buyMarketItem(${i.id})" style="padding:4px 8px; margin-top:2px;">PIRKT</button></div></div>`).join(''); } catch(e) {} }
         async function sellOnMarket() { let resType = document.getElementById('sell-res').value, amount = document.getElementById('sell-amount').value, price = document.getElementById('sell-price').value; let msg = document.getElementById('market-msg'); msg.innerHTML = `<span style="color:var(--grey)"><i class="fas fa-spinner fa-spin"></i> Liek tirgū...</span>`; try { await fetch(`${API_URL}/market/sell`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tgId, resource: resType, amount, price}) }); fetchPlayerData(); msg.innerHTML = `<span style="color:var(--green)">Izlikts pārdošanā!</span>`; } catch(e) {} }
